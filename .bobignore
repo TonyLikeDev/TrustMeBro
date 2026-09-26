@@ -1,0 +1,53 @@
+# IBM Hackathon — .bobignore
+# Prevents IBM Bob from reading sensitive files.
+# This is CRITICAL — Bob must never see credentials or secret files.
+
+# ─── Credentials & Secrets ──────────────────────────────────────────────────
+.env
+.env.*
+.env.local
+.env.production
+credentials.json
+ibm-credentials.env
+service-credentials.json
+*.key
+*.pem
+*.p12
+*.pfx
+config/secrets.json
+config/credentials.json
+secrets/
+.secrets/
+
+# ─── IBM Cloud ───────────────────────────────────────────────────────────────
+ibm_cloud_api_key*
+iam_apikey*
+apikey*
+
+# ─── Large/Binary Files ──────────────────────────────────────────────────────
+node_modules/
+venv/
+.venv/
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.mp4
+*.mov
+*.zip
+*.tar.gz
+*.pdf
+media/
+
+# ─── Build Artifacts ─────────────────────────────────────────────────────────
+dist/
+build/
+target/
+__pycache__/
+*.pyc
+.pytest_cache/
+htmlcov/
+
+# ─── Logs ────────────────────────────────────────────────────────────────────
+*.log
+logs/
