@@ -25,8 +25,10 @@ ibm_cloud_api_key*
 iam_apikey*
 apikey*
 
-# ─── Bob IDE ─────────────────────────────────────────────────────────────────
-.bob/
+# ─── Bob IDE (session-local files only) ──────────────────────────────────────
+# .bob/ skills and rules ARE committed — they are the product deliverable
+# Only the session-local context snapshot is excluded
+.bob/context/current-phase.md
 
 # ─── Node.js ─────────────────────────────────────────────────────────────────
 node_modules/
