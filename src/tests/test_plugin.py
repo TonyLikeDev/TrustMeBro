@@ -1,4 +1,4 @@
-"""Checks for the progress script and the hooks. Run: python3 tests/test_plugin.py"""
+"""Checks for the progress script and the layout and roadmap hooks. Run: python3 tests/test_plugin.py"""
 import json
 import os
 import subprocess
@@ -55,17 +55,27 @@ def test_hooks():
 
         git(p, "init", "-q")
         (p / "ROADMAP.md").write_text(SAMPLE)
+        (p / "LAYOUT.md").write_text("# Project layout\n- **signup**: creates a user\n")
         git(p, "add", ".")
         git(p, "commit", "-qm", "init")
         out = hook(p, "start")
+        assert "Layout mode" in out and "creates a user" in out, out
         assert "Roadmap mode" in out and "not a phase item" in out, out
 
         assert hook(p, "stop") == ""  # clean tree
         (p / "code.py").write_text("x = 1\n")
-        assert '"block"' in hook(p, "stop")  # code changed, roadmap untouched
+        out = hook(p, "stop")
+        assert '"block"' in out and "ROADMAP.md" in out and "LAYOUT.md" in out, out  # new file, neither doc touched
         assert hook(p, "stop") == ""  # same state: asks only once
         (p / "code.py").write_text("x = 2\n")
         assert hook(p, "stop", {"stop_hook_active": True}) == ""  # never loops
+
+        git(p, "add", ".")
+        git(p, "commit", "-qm", "code")
+        (p / "code.py").write_text("x = 3\n")
+        out = hook(p, "stop")
+        assert "ROADMAP.md" in out and "LAYOUT.md" not in out, out  # edit only: no structure change
+        (p / "code.py").write_text("x = 4\n")
         (p / "ROADMAP.md").write_text(SAMPLE + "- tick\n")
         assert hook(p, "stop") == ""  # roadmap already being updated
 

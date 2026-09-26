@@ -1,6 +1,6 @@
 ---
 name: roadmap-planner
-description: Plan a new project, from an idea or from existing documents (proposal, spec, design notes, a PDF), into PLAN.md. ROADMAP.md is not created until the user approves the plan; then the roadmap is generated and the first action runs. Use when the user runs /roadmap-planner or asks to plan a new project, turn an idea or proposal into a plan, or write a project schedule.
+description: Plan a new project, from an idea or from existing documents (proposal, spec, design notes, a PDF), or a big addition to an existing project, into PLAN.md. ROADMAP.md is not created until the user approves the plan; then the roadmap is generated and the first action runs. Use when the user runs /roadmap-planner or asks to plan a new project or a big feature, turn an idea or proposal into a plan, or write a project schedule.
 ---
 
 # Roadmap planner
@@ -9,7 +9,7 @@ Two stages with a hard stop between them. Stage 1 writes `PLAN.md`; stage 2 runs
 
 Plugin files, relative to this skill's base directory: templates at `../../templates/PLAN.md` and `../../templates/ROADMAP.md`, progress script at `../../scripts/roadmap_progress.py`.
 
-If the project already has a `ROADMAP.md`, don't plan over it: new scope goes through the deviation rule (ask the user, log it in the plan's Deviations section).
+**Planning an addition to an existing project** (a big feature): read `LAYOUT.md` first. The plan builds on the components, database and logic it describes, and names the ones it changes. If `PLAN.md` exists, append the new phases to its schedule and add a Deviations line `- YYYY-MM-DD: added <feature> (awaiting approval)`; otherwise write `PLAN.md` for this addition alone. Stage 1 runs as usual. In stage 2, add the phases to `ROADMAP.md` (creating it if needed) instead of starting a new roadmap, drop "(awaiting approval)", and update `LAYOUT.md` as the code lands.
 
 ## Stage 1: draft the plan
 
