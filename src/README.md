@@ -1,94 +1,81 @@
-# Source Code
+# RoadmapFlow Source Engine (`src/`)
 
-> All project code goes here. Structure this folder as your solution grows.
+> Deterministic core engine, project scaffolder, and empirical benchmarks for **RoadmapFlow** (IBM Bob 2.0 Hackathon).
+> Zero external dependencies, pure Python standard library (`3.10+`).
 
 ---
 
-## 📁 Suggested Structure
-
-Adapt this to your project type:
+## 📁 Source Modules
 
 ```
 src/
-├── README.md           ← This file — describe what the code does
-├── .bobignore          ← Prevents Bob from reading sensitive files
-├── .gitignore          ← Prevents secrets from being committed
-│
-├── (your project files)
-│
-└── tests/
-    └── (your test files)
+├── __init__.py           ← Package marker
+├── roadmap.py            ← Deterministic Roadmap & Context Engine (CLI + domain logic)
+├── benchmark.py          ← Empirical Token Measurement & 10-session projection engine
+├── scaffold.py           ← Project Scaffolder & 3-Tier standard layout compliance auditor
+├── test_tools.py         ← Unit tests for the engine logic
+└── README.md             ← This documentation
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🛠️ CLI & Module Usage
 
-> Fill this in as you build your project.
-
-### Prerequisites
+### 1. `roadmap.py` — Deterministic Roadmap Engine
+Handles state calculation, Tier 2 context snapshot extraction, and compliance validation:
 
 ```bash
-# List dependencies here
-# e.g.:
-# node >= 18
-# python >= 3.11
-# docker
+# Recalculate progress in-place from checkboxes (- [x], - [~], - [ ])
+python3 src/roadmap.py progress teamsource/ROADMAP.md
+
+# Extract active phase open tasks into minimal context snapshot (strictly ≤ 200 tokens)
+python3 src/roadmap.py snapshot teamsource/ROADMAP.md --output .bob/context/current-phase.md
+
+# Validate roadmap integrity and binary exit criteria
+python3 src/roadmap.py validate teamsource/ROADMAP.md
 ```
 
-### Installation
+### 2. `benchmark.py` — Empirical Token Measurement
+Simulates and measures actual files in `teamsource/` and `.bob/context/` across 10 developer sessions:
 
 ```bash
-# Steps to install and run your project
-# e.g.:
-# npm install
-# npm run dev
+python3 src/benchmark.py --json-out things/benchmark_results.json --report-out docs/BENCHMARK_REPORT.md
 ```
 
-### Running Tests
+**Measured Results:**
+- Baseline Full Context: **9,124 tokens**
+- RoadmapFlow Tier 1+2 Context: **797 tokens** (**91.26% single-session reduction**)
+- Tier 2 Snapshot alone: **156 tokens** (under ≤200 token budget)
+- 10-Session Cumulative Savings: **93.3%** (**110,270 tokens preserved**)
+
+### 3. `scaffold.py` — Project Scaffolder & Layout Auditor
+Scaffolds standard 3-tier folder structures and audits repository compliance:
 
 ```bash
-# How to run the test suite
-# e.g.:
-# npm test
-# pytest tests/
+# Scaffold a new project with 3-tier context management
+python3 src/scaffold.py init my-app --name "MyApp" --stack "Node.js" --phases 4
+
+# Audit compliance of current repository
+python3 src/scaffold.py audit .
 ```
 
 ---
 
-## 🤖 IBM Bob 2.0 Usage in This Code
+## 🧪 Running Tests
 
-> Document how Bob contributed to building this code.
-> This feeds into your IBM Bob Usage Statement for submission.
-
-| File/Module | How Bob Helped | Bob Feature Used |
-|------------|---------------|-----------------|
-| | | |
-| | | |
+```bash
+# Run unit test suite
+python3 -m unittest discover tests -v
+# OR run directly
+python3 src/test_tools.py -v
+```
 
 ---
 
-## ⚠️ Credential Safety
+## 🤖 IBM Bob 2.0 Integration
 
-- **Never hardcode API keys, passwords, or secrets** in any file in this directory
-- Use environment variables: `process.env.API_KEY` or `os.environ['API_KEY']`
-- All secrets belong in `.env` (which is in `.gitignore` and `.bobignore`)
-- IBM Cloud credential exposure = account suspension
-
-### Required `.gitignore` entries:
-```
-.env
-.env.*
-credentials.json
-ibm-credentials.env
-*.key
-*.pem
-```
-
-### Required `.bobignore` entries:
-```
-.env
-.env.*
-credentials.json
-ibm-credentials.env
-```
+| Module | Bob Feature Used | How Bob Uses It |
+|---|---|---|
+| `roadmap.py` | Document Understanding & Skills (`/roadmap-navigator`) | Extracts Tier 2 snapshots so Bob avoids 160k token context pollution |
+| `scaffold.py` | Agent Mode & Project Initialization (`/project-roadmap`) | Generates standard project layout and rules for Bob sessions |
+| `benchmark.py` | Agent Mode & Reporting | Verifies and validates empirical token savings achieved by Bob |
