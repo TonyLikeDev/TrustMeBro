@@ -208,6 +208,9 @@ def scaffold_standard_project(target_dir: Path, name: str, stack: str, phases: i
     # Directories
     dirs = [
         target_dir / "src",
+        target_dir / "src/db",
+        target_dir / "src/logic",
+        target_dir / "src/ui",
         target_dir / "tests",
         target_dir / "docs",
         target_dir / "scripts",
@@ -229,6 +232,9 @@ def scaffold_standard_project(target_dir: Path, name: str, stack: str, phases: i
         target_dir / ".gitignore": get_gitignore_template(),
         target_dir / ".bobignore": get_bobignore_template(),
         target_dir / "src/README.md": f"# Source Code — {name}\n\nProject modules live here.\n",
+        target_dir / "src/db/README.md": f"# Database & State Layout — {name}\n\nState models, schemas, and persistence contracts live here for reuse.\n",
+        target_dir / "src/logic/README.md": f"# Domain Logic Layout — {name}\n\nReusable business rules, domain services, algorithms, and validators live here.\n",
+        target_dir / "src/ui/README.md": f"# UI & Presentation Layout — {name}\n\nReusable view components, design tokens, and presentation widgets live here.\n",
         target_dir / "tests/README.md": f"# Test Suite — {name}\n\nAutomated tests live here.\n",
     }
 

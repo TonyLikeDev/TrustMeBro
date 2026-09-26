@@ -69,6 +69,21 @@ def test_hooks():
         (p / "ROADMAP.md").write_text(SAMPLE + "- tick\n")
         assert hook(p, "stop") == ""  # roadmap already being updated
 
+        # Test Tier 2 snapshot loading
+        context_dir = p / ".bob/context"
+        context_dir.mkdir(parents=True, exist_ok=True)
+        (context_dir / "current-phase.md").write_text("# Phase 1 snapshot\n")
+        out2 = hook(p, "start")
+        assert "Active Phase Snapshot" in out2 and "Phase 1 snapshot" in out2, out2
+
+        # Test teamsource roadmap discovery
+        with tempfile.TemporaryDirectory() as d2:
+            p2 = Path(d2).resolve()
+            (p2 / "teamsource").mkdir(parents=True)
+            (p2 / "teamsource/ROADMAP.md").write_text(SAMPLE)
+            out_ts = hook(p2, "start")
+            assert "Roadmap mode" in out_ts, out_ts
+
 
 if __name__ == "__main__":
     test_progress()

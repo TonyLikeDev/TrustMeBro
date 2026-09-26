@@ -42,3 +42,15 @@ The subagent returns a summary only → main context stays lean.
 
 Read each file once per task. If you need to refer back to file content,
 use the already-loaded content from Messages — do not re-read.
+
+## Rule 6: Component Reuse & Tri-Layout Tracing
+
+When implementing any feature, bug fix, or roadmap task, NEVER build from scratch.
+1. **Decompose the task into 3 Layouts**:
+   - **DB Layout**: Schema, state models, storage contracts (`src/db/` or models).
+   - **Logic Layout**: Domain rules, calculations, algorithms, services (`src/logic/` or services).
+   - **UI Layout**: Presentation, formatting, view components (`src/ui/` or components).
+2. **Scan for Component Reuse**: Before writing a single line of new code, inspect the corresponding layout directory to find existing reusable components/helpers. Reuse or compose them.
+3. **Resolve in Strict Dependency Order**:
+   `DB (State/Schema) → Logic (Domain Rules) → UI (Presentation)`
+

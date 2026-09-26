@@ -14,7 +14,7 @@ import sys
 from pathlib import Path
 
 PLUGIN = Path(__file__).resolve().parent.parent
-DIRS = ["", "docs", "research_docs"]
+DIRS = ["", "teamsource", "docs", "research_docs"]
 
 REMINDER = (
     "Code changed but {roadmap} was not touched. If this work finished or advanced a roadmap item, "
@@ -67,6 +67,9 @@ def start(project, data):
     actions = re.search(r"^## [^\n]*next actions[^\n]*\n(.*?)(?=^## |\Z)", text, re.S | re.M | re.I)
     if progress:
         print("\n## Current progress\n\n" + progress.group(1).strip())
+    tier2 = project / ".bob/context/current-phase.md"
+    if tier2.is_file():
+        print("\n## Active Phase Snapshot (Tier 2 Context)\n\n" + tier2.read_text(encoding="utf-8").strip())
     if actions:
         print("\n## Next actions\n\n" + actions.group(1).strip())
 

@@ -83,14 +83,29 @@ Before calling ANY tool, declare a todo list with `update_todo_list`:
 
 Execute the task using the appropriate tools:
 
-### For BUILD tasks (writing code, creating files, implementing modules):
-1. Read any existing stubs or related files first — understand before writing
-2. Implement the task
-3. Run the relevant test or verification command
-4. If tests fail: fix, re-run, do not mark done until passing
+### For BUILD tasks (Tri-Layout Tracing & Component Reuse):
+
+Do NOT build from scratch. Apply the **Tri-Layout Tracing** loop:
+
+1. **Trace DB Layout (State / Schema / Models)**:
+   - Does this task touch state, schemas, or persistent data models?
+   - **Reuse check**: Scan `src/db/` (or model files) for existing schemas/models before creating new ones. Re-use or extend.
+   - Resolve: Implement/verify state contracts first.
+
+2. **Trace Logic Layout (Domain Rules / Services / Processing)**:
+   - What business rules, calculations, or validations are required?
+   - **Reuse check**: Scan `src/logic/` (or services/utils) for existing helper functions/services. Re-use or compose.
+   - Resolve: Implement pure deterministic domain logic. Keep it decoupled from UI.
+
+3. **Trace UI Layout (Presentation / Components / Views)**:
+   - What presentation widgets, views, or outputs are required?
+   - **Reuse check**: Scan `src/ui/` (or components) for reusable UI components. Compose with Logic/DB.
+   - Resolve: Wire UI presentation to Logic/DB outputs. UI must never duplicate business logic or authoritative state.
+
+4. **Verify**: Run the relevant test or verification command. If tests fail: fix, re-run, do not mark done until passing.
 5. If the task requires decisions (e.g. API shape, data format): surface the decision to the
    user, propose a recommendation, wait for confirmation, log the decision in PLAN.md's
-   Decisions Log
+   Decisions Log.
 
 ### For MEASURE tasks (benchmarks, tests, experiments):
 1. Read the task to understand exactly what to run and what metric constitutes success
