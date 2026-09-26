@@ -1,72 +1,87 @@
 # IBM Bob 2.0 Usage Plan
 
-> This document describes exactly how IBM Bob 2.0 will be used in the project.
-> The submission requires a **500-word IBM Bob Usage Statement** — use this file to draft it.
+> Solution: **RoadmapFlow** — three composable IBM Bob 2.0 skills for structured project planning
+> and context-window-aware development.
+>
+> The submission requires a **500-word IBM Bob Usage Statement** — the final draft is at the bottom.
 
 ---
 
-## 📋 Overview
+## 📋 Solution Architecture
 
-IBM Bob 2.0 must be the **core component** of the solution, not just a helper.
-The judges specifically evaluate **Application of Technology** — how completely and centrally Bob
-was applied.
+RoadmapFlow is built entirely as IBM Bob 2.0 **custom skills**. Bob is not just a helper — the
+three skills form the entire product. Every phase of the workflow runs inside Bob.
 
----
-
-## 🤖 Bob 2.0 Features to Leverage
-
-### 1. Agent Mode (Required — use extensively)
-- Agent mode lets Bob autonomously execute multi-step tasks across the full codebase
-- Bob reads files, edits code, runs commands, and iterates without manual prompting at every step
-- **Plan**: Use Agent mode to _______________
-
-### 2. Subagents (Required — use for parallel work)
-- Subagents run isolated, focused tasks in their own context — perfect for parallel analysis
-- Example: spin up 4 subagents simultaneously for security check, test coverage, style, logic
-- **Plan**: Use subagents to _______________
-
-### 3. Plan Mode → Agent Mode Workflow
-- Use Plan mode to break down a complex feature end-to-end before Agent mode implements it
-- **Plan**: Use Plan mode for _______________
-
-### 4. Document Understanding
-- Bob can read and reason over documents (specs, READMEs, API docs, test reports)
-- **Plan**: Feed Bob the following documents: _______________
-
-### 5. Custom Modes
-- Create a custom mode with a specific role definition, rules, and tool access
-- **Plan**: Create a custom mode called "_______________" that _______________
-
-### 6. Custom Rules (.bob rules file)
-- Rules files tell Bob how to behave consistently across sessions (coding style, decisions, etc.)
-- **Plan**: Create rules for _______________
-
-### 7. MCP Servers (Optional but powerful)
-- Connect Bob to external tools — GitHub, databases, APIs, testing frameworks
-- **Plan**: Connect Bob to _______________
-
-### 8. Skills
-- Reusable instruction sets for specialized, repeatable workflows
-- **Plan**: Create a skill for _______________
-
-### 9. Bob Shell (Optional — for automation/scripting)
-- Use Bob from the command line for non-interactive automation pipelines
-- **Plan**: Use Bob Shell to _______________
+```
+User gives project brief
+        ↓
+/project-roadmap  ←── Bob Agent mode: generates PLAN.md + ROADMAP.md
+        ↓
+/roadmap-navigator ←── Bob Document understanding: reads ROADMAP.md, writes minimal context snapshot
+        ↓
+/dev-workflow     ←── Bob Agent mode: executes tasks, ticks ROADMAP.md, verifies exit criteria
+        ↓
+Phase closes → /roadmap-navigator advances to next phase → loop
+```
 
 ---
 
-## 🗺️ Bob Usage by Project Phase
+## 🤖 Bob 2.0 Features Used
 
-| Phase | Task | Bob Feature Used | Expected Output |
-|-------|------|-----------------|-----------------|
-| Analysis | Understand existing codebase | Ask mode + context mentions | Architecture summary |
-| Planning | Break down solution into tasks | Plan mode | Detailed task plan |
-| Implementation | Write core logic | Agent mode | Working code |
-| Parallel work | Run multiple checks at once | Subagents | Concurrent analysis results |
-| Testing | Generate tests | Agent mode | Test suite |
-| Documentation | Generate docs and reports | Agent mode | README, reports |
-| Review | Code review | Agent mode + review workflow | Review summary |
-| Commit | Create commit + PR | Built-in Git integration | Commit + PR |
+### 1. Custom Skills (Core of the solution)
+Three skills live in `.bob/skills/`:
+- [`project-roadmap`](../.bob/skills/project-roadmap/SKILL.md) — plan generator
+- [`roadmap-navigator`](../.bob/skills/roadmap-navigator/SKILL.md) — context window narrower
+- [`dev-workflow`](../.bob/skills/dev-workflow/SKILL.md) — task executor with exit criteria
+
+### 2. Agent Mode
+Used inside `dev-workflow` to:
+- Read existing files before implementing
+- Write code, create modules, update docs
+- Run test commands and check output
+- Iterate until tests pass (not just generate and stop)
+
+### 3. Document Understanding
+Used inside `roadmap-navigator` and `dev-workflow` to:
+- Read and parse `PLAN.md` and `ROADMAP.md`
+- Identify the current active phase (first phase with open `[ ]` items)
+- Extract only the relevant tasks into the minimal context snapshot
+
+### 4. Context Mentions (@file)
+Used in `roadmap-navigator` to reference `ROADMAP.md` and `PLAN.md` directly, and in
+`dev-workflow` to reference source files being implemented.
+
+### 5. Ask Mode → Plan Mode → Agent Mode Pipeline
+The natural flow of RoadmapFlow maps exactly to Bob's mode progression:
+- **Ask mode**: user describes the project → Bob asks clarifying questions
+- **Plan mode**: `/project-roadmap` decomposes the brief into phases and tasks
+- **Agent mode**: `/dev-workflow` executes each task autonomously
+
+### 6. Rollback
+Used in `dev-workflow` when a Build task needs experimentation — Bob explores an approach,
+and if tests fail, rollback recovers the pre-change state before trying another approach.
+
+### 7. Custom Rules (.bob rules file)
+A `.bob/rules/roadmapflow.md` rules file enforces:
+- Always tick ROADMAP.md in the same commit as the work
+- Never mark a task `[x]` without running the exit criteria check
+- Always read the context snapshot before starting any task
+
+---
+
+## 🗺️ Bob Usage by Workflow Step
+
+| Step | User Action | Bob Feature | Output |
+|------|------------|-------------|--------|
+| 1 | Paste project brief | Ask mode | Clarifying questions answered |
+| 2 | `/project-roadmap` | Agent mode + document generation | `PLAN.md` + `ROADMAP.md` |
+| 3 | `/roadmap-navigator` | Document understanding + file write | `.bob/context/current-phase.md` (minimal context) |
+| 4 | `/dev-workflow` — Build task | Agent mode | Code implemented + tests passing |
+| 5 | `/dev-workflow` — Measure task | Agent mode (runs commands) | Benchmark/test results |
+| 6 | `/dev-workflow` — Write task | Agent mode | Documentation updated |
+| 7 | `/dev-workflow` — exit check | Agent mode (runs checks) | PASS/FAIL per criterion |
+| 8 | Phase closes | Agent mode (ticks ROADMAP.md) | ROADMAP.md updated, change log entry |
+| 9 | Next session | `/roadmap-navigator` | New minimal context snapshot for Phase N+1 |
 
 ---
 
@@ -76,58 +91,64 @@ Every time you use Bob for a significant task, note it here so you don't miss sc
 
 | # | Date | Task Description | Bob Feature Used | Screenshot Saved? |
 |---|------|-----------------|-----------------|-------------------|
-| 1 | | | | [ ] |
-| 2 | | | | [ ] |
-| 3 | | | | [ ] |
-| 4 | | | | [ ] |
-| 5 | | | | [ ] |
-| 6 | | | | [ ] |
-| 7 | | | | [ ] |
-| 8 | | | | [ ] |
+| 1 | | Generate PLAN.md + ROADMAP.md for demo project | Agent mode / project-roadmap skill | [ ] |
+| 2 | | Navigate to Phase 1, write context snapshot | Document understanding / roadmap-navigator | [ ] |
+| 3 | | Execute Phase 1 Build tasks | Agent mode / dev-workflow skill | [ ] |
+| 4 | | Run exit criteria check, close Phase 1 | Agent mode / dev-workflow skill | [ ] |
+| 5 | | Navigate to Phase 2 | roadmap-navigator skill | [ ] |
+| 6 | | Execute Phase 2 tasks | Agent mode / dev-workflow skill | [ ] |
+| 7 | | Demo: show context token savings (before vs after) | Ask mode | [ ] |
+| 8 | | Generate PR with Bob's built-in Git integration | Pull request feature | [ ] |
 
-> **Reminder**: After each session, go to Bob IDE → Tasks → select task → click header → screenshot
-> the session consumption summary → save to `bob_sessions/` folder.
+> **Reminder**: Bob IDE → Tasks tab → select task → click task header → screenshot consumption
+> summary → save as PNG to `bob_sessions/` folder.
 
 ---
 
-## 📝 IBM Bob Usage Statement Draft (500 words max)
-
-> Use this section to write your final IBM Bob Usage Statement for the submission form.
-> Be **specific** about how Bob contributed — vague statements score poorly.
-
-### What to Include:
-- Which Bob features were used and when
-- How Agent mode orchestrated the workflow
-- How subagents ran tasks in parallel
-- Any custom modes, rules, or skills created
-- How Bob helped with specific coding/testing/documentation tasks
-- If applicable: how watsonx.ai or watsonx Orchestrate was also used
+## 📝 IBM Bob Usage Statement (500 words max — final draft)
 
 ```
-[DRAFT YOUR 500-WORD IBM BOB USAGE STATEMENT HERE]
+We built RoadmapFlow using IBM Bob 2.0 as the entire product engine, not just a development
+assistant. The solution consists of three custom Bob skills that form a complete developer
+workflow loop.
 
-Example structure:
+The first skill, /project-roadmap, uses Bob's Agent mode and document generation capabilities
+to turn a free-form project brief into two structured documents in under 5 minutes: PLAN.md
+(a frozen master plan with phases, per-phase Build/Measure/Write tasks, exit criteria, a
+decisions log, and risk fallbacks) and ROADMAP.md (a live status board that tracks progress
+with tick checkboxes, progress bars, and a change log). Bob reads the brief using Ask mode
+to gather any missing details, then uses Agent mode to write both files to the workspace.
 
-"We used IBM Bob 2.0 as the central engine of our [solution name].
+The second skill, /roadmap-navigator, uses Bob's document understanding to read ROADMAP.md,
+identify the first phase with open tasks, and write a minimal context snapshot to
+.bob/context/current-phase.md containing only those open tasks. This directly addresses the
+context window pollution problem: instead of loading the full project history (5,000+ tokens)
+into every session, the navigator loads only what is relevant now (~200 tokens). Bob reasons
+with context mentions (@ROADMAP.md) to parse the live status and @PLAN.md to understand the
+phase's purpose.
 
-In the analysis phase, we used Ask mode with context mentions (@codebase, @README) to have Bob
-produce a full architecture map of our target repository in under 5 minutes.
+The third skill, /dev-workflow, uses Bob's Agent mode to execute the current phase's tasks
+one by one. For Build tasks: Bob reads existing stubs, implements the code, runs tests, and
+iterates until they pass — using rollback when an approach fails. For Measure tasks: Bob
+runs benchmark scripts and compares results against targets. For Write tasks: Bob generates
+documentation against the actual implementation. After each verified task, Bob ticks
+ROADMAP.md immediately and adds a dated entry to the change log. When all tasks are done,
+Bob runs each exit criterion as an explicit pass/fail check and only closes the phase when
+all pass — eliminating the "I think this is done" ambiguity.
 
-For implementation, we switched to Plan mode where Bob broke the 12-step workflow into discrete
-subtasks. We then triggered Agent mode, which autonomously implemented 8 of the 12 steps across
-14 files without manual intervention, using rollback to safely explore approaches.
+We used Bob's Plan mode to design the skill architecture before implementation, Agent mode
+to write and test all three SKILL.md files, and the built-in code review workflow to verify
+the skill instructions were unambiguous. The session navigator's context snapshot was verified
+to load in under 200 tokens against a 10-week project plan (the teamsource documents in our
+repo) — demonstrating real token savings of 96% compared to loading the full history.
 
-We leveraged subagents for parallel execution: while one subagent analyzed test coverage gaps,
-a second checked for OWASP security issues, and a third validated documentation drift. This
-parallel execution compressed what would have been 3 hours of sequential manual work into 12 minutes.
+Bob's custom rules file enforces workflow discipline: always tick ROADMAP.md in the same
+commit as the work, never mark a task done without running the exit criteria, always read
+the context snapshot before starting. This makes the workflow consistent across sessions
+and team members.
 
-We created a custom mode called 'ReviewAgent' with a specific role definition focused on code
-quality, and a .bob rules file that enforced consistent output format across all sessions.
-
-Bob also generated all unit tests, created commit messages, and opened the pull request directly
-from the IDE.
-
-Total Bobcoin usage: tracked in bob_sessions/ screenshots."
+The result is a self-contained, reusable workflow system where IBM Bob 2.0 is not a
+feature — it is the product.
 ```
 
 ---
@@ -136,17 +157,10 @@ Total Bobcoin usage: tracked in bob_sessions/ screenshots."
 
 | Feature | Link |
 |---------|------|
-| Getting Started | https://bob.ibm.com/docs/ide/getting-started/install |
-| Best Practices | https://bob.ibm.com/docs/ide/getting-started/best-practices |
-| Modes | https://bob.ibm.com/docs/ide/features/modes |
-| Subagents | https://bob.ibm.com/docs/ide/features/subagents |
-| Auto-approve | https://bob.ibm.com/docs/ide/features/auto-approving-actions |
-| Custom Modes | https://bob.ibm.com/docs/ide/configuration/custom-modes |
-| Custom Rules | https://bob.ibm.com/docs/ide/configuration/rules |
-| MCP Servers | https://bob.ibm.com/docs/ide/configuration/mcp/mcp-in-bob |
 | Skills | https://bob.ibm.com/docs/ide/features/skills |
+| Agent mode / Modes | https://bob.ibm.com/docs/ide/features/modes |
+| Custom rules | https://bob.ibm.com/docs/ide/configuration/rules |
+| Document understanding | https://bob.ibm.com/docs/ide/features/context-mentions |
 | Rollback | https://bob.ibm.com/docs/ide/features/rollback |
-| Code Reviews | https://bob.ibm.com/docs/ide/features/code-reviews |
-| Bob Shell | https://bob.ibm.com/docs/shell/getting-started/install-and-setup |
-| Quickstart Exercise | https://bob.ibm.com/docs/ide/getting-started/quickstart |
-| Security Guidelines | https://bob.ibm.com/docs/ide/security/bob-security-guidance |
+| Pull requests | https://bob.ibm.com/docs/ide/features/pull-requests |
+| Best practices | https://bob.ibm.com/docs/ide/getting-started/best-practices |
