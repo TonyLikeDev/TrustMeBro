@@ -1,57 +1,80 @@
-# Source Code
+# tricklord
 
-> All project code goes here. Structure this folder as your solution grows.
+> A Claude Code plugin for plan-first projects: plan the work in `PLAN.md`, track it in `ROADMAP.md`, and have Claude keep the roadmap current as work lands.
 
 ---
 
-## 📁 Suggested Structure
+## Commands
 
-Adapt this to your project type:
+- `/roadmap-planner`: an idea or source documents become `PLAN.md`. It stops for your review; once you approve, it creates `ROADMAP.md` and does the first action.
+- `/roadmap-init`: an existing codebase becomes `ROADMAP.md`, with done / unverified / open items and the evidence for each.
+- `/roadmap-sync`: checks the roadmap against the code and git history and fixes the drift.
+
+(Also reachable as `/tricklord:roadmap-planner` and so on.)
+
+## What happens automatically
+
+- **Session start, `ROADMAP.md` present** (project root, `docs/` or `research_docs/`): Claude gets the roadmap rules from `rules.md`, the progress block and the next actions, and reads the roadmap before the code.
+- **Session start, plan but no roadmap**: Claude is told the plan is an unapproved draft and not to start building.
+- **End of a reply that changed code but not the roadmap**: Claude is asked once whether an item should be ticked.
+
+Edit `rules.md` to change how Claude maintains the roadmap, and `templates/` to change the document format.
+
+---
+
+## 📁 Layout
 
 ```
 src/
-├── README.md           ← This file — describe what the code does
-├── .bobignore          ← Prevents Bob from reading sensitive files
-├── .gitignore          ← Prevents secrets from being committed
-│
-├── (your project files)
-│
-└── tests/
-    └── (your test files)
+├── .claude-plugin/
+│   ├── plugin.json              plugin manifest (name, version, description)
+│   └── marketplace.json         lets /plugin marketplace add install it
+├── skills/
+│   ├── roadmap-planner/SKILL.md /roadmap-planner: idea or documents → PLAN.md, approve → ROADMAP.md
+│   ├── roadmap-init/SKILL.md    /roadmap-init: existing code → ROADMAP.md with evidence
+│   └── roadmap-sync/SKILL.md    /roadmap-sync: fix drift between roadmap and code
+├── hooks/
+│   ├── hooks.json               registers the SessionStart and Stop hooks
+│   └── roadmap_hook.py          start: load rules + progress + next actions; stop: tick reminder
+├── rules.md                     the roadmap rules loaded into every session that has a ROADMAP.md
+├── templates/
+│   ├── PLAN.md                  plan format: decisions, objectives, design, schedule, risks, deviations
+│   └── ROADMAP.md               status board format: progress block, phases, next actions, change log
+├── scripts/
+│   └── roadmap_progress.py      regenerates the progress block from the checkboxes
+├── tests/
+│   └── test_plugin.py           checks the progress math and both hooks
+└── research_docs/               example plan and roadmap from a real project
 ```
 
 ---
 
 ## 🚀 Getting Started
 
-> Fill this in as you build your project.
-
 ### Prerequisites
 
 ```bash
-# List dependencies here
-# e.g.:
-# node >= 18
-# python >= 3.11
-# docker
+# Claude Code
+# git
+# python >= 3.8 (as python3 or python)
 ```
 
 ### Installation
 
 ```bash
-# Steps to install and run your project
-# e.g.:
-# npm install
-# npm run dev
+# Try it without installing
+claude --plugin-dir /path/to/tricklord/src
+
+# Install for good (run inside Claude Code)
+/plugin marketplace add /path/to/tricklord/src
+/plugin install tricklord@tricklord
 ```
 
 ### Running Tests
 
 ```bash
-# How to run the test suite
-# e.g.:
-# npm test
-# pytest tests/
+cd src
+python3 tests/test_plugin.py
 ```
 
 ---
@@ -62,9 +85,9 @@ src/
 > This feeds into your IBM Bob Usage Statement for submission.
 
 | File/Module | How Bob Helped | Bob Feature Used |
-|------------|---------------|-----------------|
-| | | |
-| | | |
+| ----------- | -------------- | ---------------- |
+|             |                |                  |
+|             |                |                  |
 
 ---
 
@@ -76,6 +99,7 @@ src/
 - IBM Cloud credential exposure = account suspension
 
 ### Required `.gitignore` entries:
+
 ```
 .env
 .env.*
@@ -86,6 +110,7 @@ ibm-credentials.env
 ```
 
 ### Required `.bobignore` entries:
+
 ```
 .env
 .env.*
