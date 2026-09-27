@@ -24,6 +24,8 @@ Known flaws in the tricklord plugin. One entry per bug. When one is fixed, set i
 | BUG-018 | Serious | Bob `Stop` and `PostToolUse` hooks do nothing | fixed (v0.4.0) |
 | BUG-019 | Serious | Bob port only works inside this repo | fixed (v0.4.0) |
 | BUG-020 | Serious | New tasks are not put on the roadmap automatically | fixed (v0.4.0) |
+| BUG-021 | Minor | Bob loads the tricklord rules twice | open |
+| BUG-022 | Medium | The roadmap entry is sometimes written after the code | open |
 
 ---
 
@@ -166,7 +168,7 @@ Known flaws in the tricklord plugin. One entry per bug. When one is fixed, set i
 - **Severity:** serious · **Found:** 2026-09-27 · **Status:** fixed (v0.4.0)
 - **Where:** `.bob/settings.json`
 - **What happens:** the Bob port copied the Claude Code hooks, but per Bob's lifecycle-hooks docs (bob.ibm.com/docs/ide/configuration/lifecycle-hooks) Bob ignores the stdout of `PostToolUse` and `Stop`, has no `{"decision": "block"}`, and sends tool arguments as `input` (not `tool_input`). So the edit log and the end-of-reply reminder never worked in Bob. Only `SessionStart` and `UserPromptSubmit` output reaches Bob's context.
-- **Fix (v0.4.0):** `.bob/settings.json` now registers only `UserPromptSubmit` (the new-task reminder, BUG-020). The layout and roadmap rules reach Bob through `.bob/rules/tricklord.md`, which Bob always loads.
+- **Fix (v0.4.0):** `.bob/settings.json` registers only the two events whose output reaches Bob: `UserPromptSubmit` (the new-task reminder, BUG-020) and `SessionStart` (rules, progress headline, next actions; reads the rules from `.bob/tricklord/rules/`, without a matcher since Bob's docs don't define one for this event). Its output reached Bob in the live test: Bob refreshed progress with the exact quoted interpreter-and-script command that only the `SessionStart` rules contain. `PostToolUse` and `Stop` were briefly re-added and removed again. The end-of-reply reminder stays Claude Code only; in Bob, `.bob/rules/tricklord.md` (always loaded) carries it.
 
 ### BUG-019: Bob port only works inside this repo
 
@@ -180,4 +182,18 @@ Known flaws in the tricklord plugin. One entry per bug. When one is fixed, set i
 - **Severity:** serious · **Found:** 2026-09-27 (reported from Bob) · **Status:** fixed (v0.4.0)
 - **Where:** `rules/layout.md`, `.bob/rules/tricklord.md`, `hooks/roadmap_hook.py`
 - **What happens:** with a `LAYOUT.md` and a new task, Bob did not create or update a roadmap. The rule covered only features ("not a bug fix or a small tweak"), nothing fired when a task arrived (Bob's only reminder was a rule in its system prompt), and in live tests a model asked to create the roadmap wrote its own stripped-down version without the `<!-- tricklord -->` marker or progress markers.
-- **Fix (v0.4.0):** every new task that changes the project is recorded before the work (feature → `## Feature <n>` phase; fix or small change → item under `## Maintenance: fixes and small changes`; big work → phase with `[ ] Plan approved by the user` and no code until approved). A new `prompt` hook on `UserPromptSubmit` (Claude Code and Bob) reminds the AI with every prompt, and when a marked `LAYOUT.md` has no roadmap it creates `ROADMAP.md` itself from the template, so the format is always right; a repo's own unmarked `ROADMAP.md` is never touched. Verified live in Claude Code (`claude -p`, Sonnet 5): the hook created the roadmap, the task was recorded under Maintenance before `app.py` was edited, then ticked, and `LAYOUT.md` was updated. **Not yet verified in Bob**: `bob run` needs `BOB_API_KEY`, which this test environment did not have.
+- **Fix (v0.4.0):** every new task that changes the project is recorded before the work (feature → `## Feature <n>` phase; fix or small change → item under `## Maintenance: fixes and small changes`; big work → phase with `[ ] Plan approved by the user` and no code until approved). A new `prompt` hook on `UserPromptSubmit` (Claude Code and Bob) reminds the AI with every prompt, and when a marked `LAYOUT.md` has no roadmap it creates `ROADMAP.md` itself from the template, so the format is always right; a repo's own unmarked `ROADMAP.md` is never touched. Verified live in Claude Code (`claude -p`, Sonnet 5): the hook created the roadmap, the task was recorded under Maintenance before `app.py` was edited, then ticked, and `LAYOUT.md` was updated. Verified in IBM Bob Shell 2.0.5 (`bob run`, task `22fdf4fa00395fcc3ecaf7472b82d4b9`, 35 s, cost 0.458): the hook created `ROADMAP.md` before Bob's first step; Bob's todo list started with "Add multiply task to ROADMAP.md", it added `## Feature 1: multiply function` before editing `app.py`, then updated `LAYOUT.md`, ticked both items with evidence, added a change-log line, ran the progress script (100%) and told the user in one line.
+
+### BUG-021: Bob loads the tricklord rules twice
+
+- **Severity:** minor · **Found:** 2026-09-27 · **Status:** open
+- **Where:** `.bob/settings.json` (`SessionStart`), `.bob/rules/tricklord.md`, `.bob/tricklord/rules/`
+- **What happens:** Bob always loads `.bob/rules/tricklord.md`, and the `SessionStart` hook prints the same layout and roadmap rules again (from `.bob/tricklord/rules/`), so every Bob session carries about 3,000 extra characters.
+- **Fix idea:** give the hook a `start --state-only` mode for Bob that prints only the progress headline, next actions and layout, and keep the rules in `.bob/rules/tricklord.md`.
+
+### BUG-022: The roadmap entry is sometimes written after the code
+
+- **Severity:** medium · **Found:** 2026-09-27 (benchmark) · **Status:** open
+- **Where:** `hooks/roadmap_hook.py` (`prompt` reminder), `rules/layout.md`
+- **What happens:** in the Claude Code benchmark (`benchmark/results.csv`), every tricklord run put the task on the roadmap, but in 2 of 6 runs (the `feature` task, repeat 2, and the `fix` task, repeat 1) Claude edited `app.py` first and added the ticked roadmap item afterwards. The reminder says "before doing the work", but it is only advice.
+- **Fix idea:** enforce the order with a `PreToolUse` hook, which both Claude Code (exit code 2 or a deny decision) and Bob (exit code 2) can use to block a tool: block the first edit of a code file in a turn until `ROADMAP.md` has been edited in that turn, with a message saying why. Then rerun `python3 benchmark/bench.py run --agent claude --reps 2`.

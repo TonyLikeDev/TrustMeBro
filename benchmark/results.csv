@@ -1,0 +1,13 @@
+agent,model,setup,task,rep,recorded,recorded_first,layout_current,correct,cost,seconds,tool_calls,date
+claude,sonnet,base,feature,1,0,0,0,1,0.1025,10.3,2,2026-09-27
+claude,sonnet,tricklord,feature,1,1,1,1,1,0.1791,29.4,8,2026-09-27
+claude,sonnet,base,fix,1,0,0,,1,0.1108,11.4,3,2026-09-27
+claude,sonnet,tricklord,fix,1,1,0,,1,0.1292,15.8,5,2026-09-27
+claude,sonnet,base,module,1,0,0,0,1,0.0939,6.7,1,2026-09-27
+claude,sonnet,tricklord,module,1,1,1,1,1,0.1692,22.9,7,2026-09-27
+claude,sonnet,base,feature,2,0,0,0,1,0.1021,9.0,2,2026-09-27
+claude,sonnet,tricklord,feature,2,1,0,1,1,0.1505,17.6,7,2026-09-27
+claude,sonnet,base,fix,2,0,0,,1,0.1201,11.4,4,2026-09-27
+claude,sonnet,tricklord,fix,2,1,1,,1,0.1177,15.8,4,2026-09-27
+claude,sonnet,base,module,2,0,0,0,1,0.0941,16.5,1,2026-09-27
+claude,sonnet,tricklord,module,2,1,1,1,1,0.158,24.5,6,2026-09-27

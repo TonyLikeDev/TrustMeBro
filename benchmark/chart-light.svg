@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="396" viewBox="0 0 720 396" font-family="system-ui, -apple-system, Segoe UI, sans-serif" role="img" aria-label="Benchmark: agent with and without tricklord">
+  <rect width="720" height="396" rx="8" fill="#fcfcfb"/>
+  <text x="24" y="34" font-size="17" font-weight="600" fill="#0b0b0b" text-anchor="start">Does the agent keep the roadmap and layout up to date?</text>
+  <text x="24" y="56" font-size="13" font-weight="400" fill="#52514e" text-anchor="start">Share of runs. Same 3 tasks (feature, bug fix, new module), fresh project every run.</text>
+  <rect x="24" y="72" width="12" height="12" rx="2" fill="#2a78d6"/>
+  <text x="42" y="82" font-size="13" font-weight="400" fill="#52514e" text-anchor="start">With tricklord</text>
+  <rect x="168" y="72" width="12" height="12" rx="2" fill="#eb6834"/>
+  <text x="186" y="82" font-size="13" font-weight="400" fill="#52514e" text-anchor="start">Without tricklord (base agent)</text>
+  <text x="24" y="118" font-size="14" font-weight="600" fill="#0b0b0b" text-anchor="start">Claude Code (6 runs per setup)</text>
+  <line x1="262.0" y1="130" x2="262.0" y2="340" stroke="#c3c2b7" stroke-width="1"/>
+  <text x="262.0" y="356" font-size="11" font-weight="400" fill="#898781" text-anchor="middle">0%</text>
+  <line x1="362.0" y1="130" x2="362.0" y2="340" stroke="#e1e0d9" stroke-width="1"/>
+  <text x="362.0" y="356" font-size="11" font-weight="400" fill="#898781" text-anchor="middle">25%</text>
+  <line x1="462.0" y1="130" x2="462.0" y2="340" stroke="#e1e0d9" stroke-width="1"/>
+  <text x="462.0" y="356" font-size="11" font-weight="400" fill="#898781" text-anchor="middle">50%</text>
+  <line x1="562.0" y1="130" x2="562.0" y2="340" stroke="#e1e0d9" stroke-width="1"/>
+  <text x="562.0" y="356" font-size="11" font-weight="400" fill="#898781" text-anchor="middle">75%</text>
+  <line x1="662.0" y1="130" x2="662.0" y2="340" stroke="#e1e0d9" stroke-width="1"/>
+  <text x="662.0" y="356" font-size="11" font-weight="400" fill="#898781" text-anchor="middle">100%</text>
+  <text x="250" y="158.0" font-size="13" font-weight="400" fill="#52514e" text-anchor="end">Task put on the roadmap</text>
+  <path d="M262,136h396.0a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-396.0z" fill="#2a78d6"><title>With tricklord: Task put on the roadmap 100%</title></path>
+  <text x="668.0" y="148" font-size="12" font-weight="400" fill="#0b0b0b" text-anchor="start">100%</text>
+  <text x="268.0" y="168" font-size="12" font-weight="400" fill="#0b0b0b" text-anchor="start">0%</text>
+  <text x="250" y="212.0" font-size="13" font-weight="400" fill="#52514e" text-anchor="end">... before any code was written</text>
+  <path d="M262,190h262.7a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-262.7z" fill="#2a78d6"><title>With tricklord: before any code was written 67%</title></path>
+  <text x="534.6666666666667" y="202" font-size="12" font-weight="400" fill="#0b0b0b" text-anchor="start">67%</text>
+  <text x="268.0" y="222" font-size="12" font-weight="400" fill="#0b0b0b" text-anchor="start">0%</text>
+  <text x="250" y="266.0" font-size="13" font-weight="400" fill="#52514e" text-anchor="end">LAYOUT.md kept up to date</text>
+  <path d="M262,244h396.0a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-396.0z" fill="#2a78d6"><title>With tricklord: LAYOUT.md kept up to date 100%</title></path>
+  <text x="668.0" y="256" font-size="12" font-weight="400" fill="#0b0b0b" text-anchor="start">100%</text>
+  <text x="268.0" y="276" font-size="12" font-weight="400" fill="#0b0b0b" text-anchor="start">0%</text>
+  <text x="250" y="320.0" font-size="13" font-weight="400" fill="#52514e" text-anchor="end">Task done correctly</text>
+  <path d="M262,298h396.0a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-396.0z" fill="#2a78d6"><title>With tricklord: Task done correctly 100%</title></path>
+  <text x="668.0" y="310" font-size="12" font-weight="400" fill="#0b0b0b" text-anchor="start">100%</text>
+  <path d="M262,318h396.0a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-396.0z" fill="#eb6834"><title>Without tricklord (base agent): Task done correctly 100%</title></path>
+  <text x="668.0" y="330" font-size="12" font-weight="400" fill="#0b0b0b" text-anchor="start">100%</text>
+  <text x="24" y="380" font-size="11" font-weight="400" fill="#898781" text-anchor="start">Scored from the files each run leaves and the order of its edits. Source: benchmark/bench.py, benchmark/results.csv</text>
+</svg>

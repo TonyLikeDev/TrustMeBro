@@ -67,12 +67,13 @@ Project: `app.py` with an `add` function and a marked `LAYOUT.md`, no roadmap. P
 | N1 | Rule + reminder, AI creates the roadmap | Roadmap written before the code, task under Maintenance, but a stripped-down file without the `<!-- tricklord -->` marker | ❌ format |
 | N2 | Wording: keep the marker and sections | Marker, Next actions and Change log kept, but no progress markers (hand-written "Progress: 1/1") | ❌ format |
 | N3 | Hook creates `ROADMAP.md` from the template | Hook-made roadmap; Claude added `[ ] Add multiply(a, b)` under Maintenance **before** editing `app.py`, then ticked it and updated `LAYOUT.md` | ✅ pass |
+| B1 | Same, in **IBM Bob Shell 2.0.5** (`bob run`, `.bob/` copied in, hooks `SessionStart` + `UserPromptSubmit`) | `ROADMAP.md` existed before Bob's first step (made by the hook). Todo list: roadmap entry first. Added `## Feature 1: multiply function` (step 5) before editing `app.py` (step 7), updated `LAYOUT.md`, ticked both items with evidence, change-log line, ran the progress script (100%). 12 tool calls, 35 s, cost 0.458, task `22fdf4fa00395fcc3ecaf7472b82d4b9` | ✅ pass |
 
-Progress block stayed empty in N3 because running the progress script needs a Bash permission (BUG-013). The same test in IBM Bob (`bob run`) could not run here: it needs `BOB_API_KEY`.
+Progress block stayed empty in N3 because running the progress script needs a Bash permission (BUG-013); Bob ran it without asking in B1. B1 was run by the user with their `BOB_API_KEY`. Cosmetic in B1: the phase has no `### Build` heading and "Exit criteria:" is plain text (the progress script still counted both items), and the header says "Plan: `PLAN.md`" although the project has no plan.
 
 ## Not covered
 
 - `/layout-init`, `/roadmap-planner` and `/roadmap-sync` live runs.
 - Windows (the `python3 || python` hook command).
-- The new-task flow in IBM Bob (needs `BOB_API_KEY`).
+- In Bob: a question ("What does add() do?") should add no roadmap entry; not run yet.
 - Interactive sessions (all runs used `claude -p`).

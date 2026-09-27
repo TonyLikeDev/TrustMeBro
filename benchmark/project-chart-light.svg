@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1044" viewBox="0 0 720 1044" font-family="system-ui, -apple-system, Segoe UI, sans-serif" role="img" aria-label="Project benchmark: tricklord, docs only and base agent">
+  <rect width="720" height="1044" rx="8" fill="#fcfcfb"/>
+  <text x="24" y="34" font-size="17" font-weight="600" fill="#0b0b0b" text-anchor="start">tricklord vs the base agent on a half-finished project</text>
+  <text x="24" y="56" font-size="13" font-weight="400" fill="#52514e" text-anchor="start">shoplite: 35 files, 3 features done, 2 open, 1 known bug. Claude Code, Sonnet 5, fresh session per task.</text>
+  <rect x="24" y="72" width="12" height="12" rx="2" fill="#2a78d6"/>
+  <text x="42" y="82" font-size="13" font-weight="400" fill="#52514e" text-anchor="start">With tricklord</text>
+  <rect x="168" y="72" width="12" height="12" rx="2" fill="#1baf7a"/>
+  <text x="186" y="82" font-size="13" font-weight="400" fill="#52514e" text-anchor="start">Docs only, no plugin</text>
+  <rect x="354" y="72" width="12" height="12" rx="2" fill="#eb6834"/>
+  <text x="372" y="82" font-size="13" font-weight="400" fill="#52514e" text-anchor="start">Base agent</text>
+  <text x="24" y="120" font-size="14" font-weight="600" fill="#0b0b0b" text-anchor="start">Median time per run (seconds)</text>
+  <line x1="226" y1="132" x2="226" y2="384" stroke="#c3c2b7" stroke-width="1"/>
+  <line x1="331.0" y1="132" x2="331.0" y2="384" stroke="#e1e0d9" stroke-width="1"/>
+  <line x1="436.0" y1="132" x2="436.0" y2="384" stroke="#e1e0d9" stroke-width="1"/>
+  <line x1="541.0" y1="132" x2="541.0" y2="384" stroke="#e1e0d9" stroke-width="1"/>
+  <line x1="646" y1="132" x2="646" y2="384" stroke="#e1e0d9" stroke-width="1"/>
+  <text x="214" y="164.5" font-size="13" font-weight="400" fill="#52514e" text-anchor="end">Resume: do the next task</text>
+  <path d="M226,138h126.0a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-126.0z" fill="#2a78d6"><title>With tricklord, Resume: do the next task: 51 s</title></path>
+  <text x="362.00465969747313" y="148.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">51 s</text>
+  <path d="M226,154h173.0a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-173.0z" fill="#1baf7a"><title>Docs only, no plugin, Resume: do the next task: 69 s</title></path>
+  <text x="408.9697826652827" y="164.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">69 s</text>
+  <path d="M226,170h262.8a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-262.8z" fill="#eb6834"><title>Base agent, Resume: do the next task: 104 s</title></path>
+  <text x="498.83214484267893" y="180.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">104 s</text>
+  <text x="214" y="229.5" font-size="13" font-weight="400" fill="#52514e" text-anchor="end">Add a cross-module feature</text>
+  <path d="M226,203h172.9a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-172.9z" fill="#2a78d6"><title>With tricklord, Add a cross-module feature: 69 s</title></path>
+  <text x="408.9481873776829" y="213.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">69 s</text>
+  <path d="M226,219h143.6a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-143.6z" fill="#1baf7a"><title>Docs only, no plugin, Add a cross-module feature: 57 s</title></path>
+  <text x="379.6289852464337" y="229.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">57 s</text>
+  <path d="M226,235h144.6a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-144.6z" fill="#eb6834"><title>Base agent, Add a cross-module feature: 58 s</title></path>
+  <text x="380.61696965412193" y="245.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">58 s</text>
+  <text x="214" y="294.5" font-size="13" font-weight="400" fill="#52514e" text-anchor="end">What's done and what's left?</text>
+  <path d="M226,268h23.2a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-23.2z" fill="#2a78d6"><title>With tricklord, What's done and what's left?: 11 s</title></path>
+  <text x="259.22908679570276" y="278.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">11 s</text>
+  <path d="M226,284h33.6a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-33.6z" fill="#1baf7a"><title>Docs only, no plugin, What's done and what's left?: 15 s</title></path>
+  <text x="269.5534338756793" y="294.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">15 s</text>
+  <path d="M226,300h54.3a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-54.3z" fill="#eb6834"><title>Base agent, What's done and what's left?: 23 s</title></path>
+  <text x="290.32244463797366" y="310.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">23 s</text>
+  <text x="214" y="359.5" font-size="13" font-weight="400" fill="#52514e" text-anchor="end">Two tasks, two sessions</text>
+  <path d="M226,333h377.8a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-377.8z" fill="#2a78d6"><title>With tricklord, Two tasks, two sessions: 149 s</title></path>
+  <text x="613.8181818181818" y="343.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">149 s</text>
+  <path d="M226,349h318.2a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-318.2z" fill="#1baf7a"><title>Docs only, no plugin, Two tasks, two sessions: 125 s</title></path>
+  <text x="554.2149309561378" y="359.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">125 s</text>
+  <path d="M226,365h289.3a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-289.3z" fill="#eb6834"><title>Base agent, Two tasks, two sessions: 114 s</title></path>
+  <text x="525.2633628875985" y="375.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">114 s</text>
+  <text x="24" y="428" font-size="14" font-weight="600" fill="#0b0b0b" text-anchor="start">Median tokens per run (thousands, incl. cached)</text>
+  <line x1="226" y1="440" x2="226" y2="692" stroke="#c3c2b7" stroke-width="1"/>
+  <line x1="331.0" y1="440" x2="331.0" y2="692" stroke="#e1e0d9" stroke-width="1"/>
+  <line x1="436.0" y1="440" x2="436.0" y2="692" stroke="#e1e0d9" stroke-width="1"/>
+  <line x1="541.0" y1="440" x2="541.0" y2="692" stroke="#e1e0d9" stroke-width="1"/>
+  <line x1="646" y1="440" x2="646" y2="692" stroke="#e1e0d9" stroke-width="1"/>
+  <text x="214" y="472.5" font-size="13" font-weight="400" fill="#52514e" text-anchor="end">Resume: do the next task</text>
+  <path d="M226,446h148.5a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-148.5z" fill="#2a78d6"><title>With tricklord, Resume: do the next task: 468k</title></path>
+  <text x="384.48597292093393" y="456.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">468k</text>
+  <path d="M226,462h164.7a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-164.7z" fill="#1baf7a"><title>Docs only, no plugin, Resume: do the next task: 518k</title></path>
+  <text x="400.69423205081796" y="472.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">518k</text>
+  <path d="M226,478h189.1a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-189.1z" fill="#eb6834"><title>Base agent, Resume: do the next task: 593k</title></path>
+  <text x="425.12876900074275" y="488.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">593k</text>
+  <text x="214" y="537.5" font-size="13" font-weight="400" fill="#52514e" text-anchor="end">Add a cross-module feature</text>
+  <path d="M226,511h154.1a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-154.1z" fill="#2a78d6"><title>With tricklord, Add a cross-module feature: 485k</title></path>
+  <text x="390.12531356232626" y="521.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">485k</text>
+  <path d="M226,527h128.2a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-128.2z" fill="#1baf7a"><title>Docs only, no plugin, Add a cross-module feature: 406k</title></path>
+  <text x="364.1634348306486" y="537.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">406k</text>
+  <path d="M226,543h115.9a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-115.9z" fill="#eb6834"><title>Base agent, Add a cross-module feature: 368k</title></path>
+  <text x="351.87629755376986" y="553.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">368k</text>
+  <text x="214" y="602.5" font-size="13" font-weight="400" fill="#52514e" text-anchor="end">What's done and what's left?</text>
+  <path d="M226,576h16.7a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-16.7z" fill="#2a78d6"><title>With tricklord, What's done and what's left?: 63k</title></path>
+  <text x="252.66943913476535" y="586.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">63k</text>
+  <path d="M226,592h24.3a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-24.3z" fill="#1baf7a"><title>Docs only, no plugin, What's done and what's left?: 87k</title></path>
+  <text x="260.30973105901296" y="602.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">87k</text>
+  <path d="M226,608h33.8a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-33.8z" fill="#eb6834"><title>Base agent, What's done and what's left?: 116k</title></path>
+  <text x="269.8343633985817" y="618.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">116k</text>
+  <text x="214" y="667.5" font-size="13" font-weight="400" fill="#52514e" text-anchor="end">Two tasks, two sessions</text>
+  <path d="M226,641h328.2a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-328.2z" fill="#2a78d6"><title>With tricklord, Two tasks, two sessions: 1020k</title></path>
+  <text x="564.1838083840546" y="651.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">1020k</text>
+  <path d="M226,657h377.8a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-377.8z" fill="#1baf7a"><title>Docs only, no plugin, Two tasks, two sessions: 1172k</title></path>
+  <text x="613.8181818181818" y="667.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">1172k</text>
+  <path d="M226,673h310.6a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-310.6z" fill="#eb6834"><title>Base agent, Two tasks, two sessions: 966k</title></path>
+  <text x="546.6382701573509" y="683.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">966k</text>
+  <text x="24" y="736" font-size="14" font-weight="600" fill="#0b0b0b" text-anchor="start">Median cost per run (US dollars)</text>
+  <line x1="226" y1="748" x2="226" y2="1000" stroke="#c3c2b7" stroke-width="1"/>
+  <line x1="331.0" y1="748" x2="331.0" y2="1000" stroke="#e1e0d9" stroke-width="1"/>
+  <line x1="436.0" y1="748" x2="436.0" y2="1000" stroke="#e1e0d9" stroke-width="1"/>
+  <line x1="541.0" y1="748" x2="541.0" y2="1000" stroke="#e1e0d9" stroke-width="1"/>
+  <line x1="646" y1="748" x2="646" y2="1000" stroke="#e1e0d9" stroke-width="1"/>
+  <text x="214" y="780.5" font-size="13" font-weight="400" fill="#52514e" text-anchor="end">Resume: do the next task</text>
+  <path d="M226,754h154.0a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-154.0z" fill="#2a78d6"><title>With tricklord, Resume: do the next task: $0.22</title></path>
+  <text x="390.02918112755594" y="764.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">$0.22</text>
+  <path d="M226,770h171.7a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-171.7z" fill="#1baf7a"><title>Docs only, no plugin, Resume: do the next task: $0.24</title></path>
+  <text x="407.7266870066178" y="780.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">$0.24</text>
+  <path d="M226,786h218.2a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-218.2z" fill="#eb6834"><title>Base agent, Resume: do the next task: $0.30</title></path>
+  <text x="454.2101775520373" y="796.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">$0.30</text>
+  <text x="214" y="845.5" font-size="13" font-weight="400" fill="#52514e" text-anchor="end">Add a cross-module feature</text>
+  <path d="M226,819h191.2a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-191.2z" fill="#2a78d6"><title>With tricklord, Add a cross-module feature: $0.27</title></path>
+  <text x="427.18660011015044" y="829.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">$0.27</text>
+  <path d="M226,835h149.9a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-149.9z" fill="#1baf7a"><title>Docs only, no plugin, Add a cross-module feature: $0.21</title></path>
+  <text x="385.9168976037906" y="845.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">$0.21</text>
+  <path d="M226,851h143.7a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-143.7z" fill="#eb6834"><title>Base agent, Add a cross-module feature: $0.20</title></path>
+  <text x="379.6750386837895" y="861.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">$0.20</text>
+  <text x="214" y="910.5" font-size="13" font-weight="400" fill="#52514e" text-anchor="end">What's done and what's left?</text>
+  <path d="M226,884h51.7a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-51.7z" fill="#2a78d6"><title>With tricklord, What's done and what's left?: $0.08</title></path>
+  <text x="287.66269483953874" y="894.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">$0.08</text>
+  <path d="M226,900h53.9a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-53.9z" fill="#1baf7a"><title>Docs only, no plugin, What's done and what's left?: $0.08</title></path>
+  <text x="289.8657038701274" y="910.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">$0.08</text>
+  <path d="M226,916h56.6a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-56.6z" fill="#eb6834"><title>Base agent, What's done and what's left?: $0.08</title></path>
+  <text x="292.58274834118663" y="926.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">$0.08</text>
+  <text x="214" y="975.5" font-size="13" font-weight="400" fill="#52514e" text-anchor="end">Two tasks, two sessions</text>
+  <path d="M226,949h377.8a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-377.8z" fill="#2a78d6"><title>With tricklord, Two tasks, two sessions: $0.52</title></path>
+  <text x="613.8181818181818" y="959.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">$0.52</text>
+  <path d="M226,965h336.7a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-336.7z" fill="#1baf7a"><title>Docs only, no plugin, Two tasks, two sessions: $0.46</title></path>
+  <text x="572.7320633977042" y="975.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">$0.46</text>
+  <path d="M226,981h294.5a4,4 0 0 1 4,4v5a4,4 0 0 1 -4,4h-294.5z" fill="#eb6834"><title>Base agent, Two tasks, two sessions: $0.41</title></path>
+  <text x="530.5444404619325" y="991.5" font-size="11" font-weight="400" fill="#0b0b0b" text-anchor="start">$0.41</text>
+  <text x="24" y="1030" font-size="11" font-weight="400" fill="#898781" text-anchor="start">Medians over 3 runs per cell (2 for the two-session chain). Source: benchmark/project_bench.py, benchmark/project_results.csv</text>
+</svg>

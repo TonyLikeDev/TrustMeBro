@@ -151,7 +151,8 @@ def test_bob_copy():
                                ("scripts/roadmap_progress.py", "scripts/roadmap_progress.py"),
                                ("templates/ROADMAP.md", "templates/ROADMAP.md"),
                                ("templates/PLAN.md", "templates/PLAN.md"),
-                               ("templates/LAYOUT.md", "templates/LAYOUT.md")]:
+                               ("templates/LAYOUT.md", "templates/LAYOUT.md"),
+                               ("rules/layout.md", "rules/layout.md")]:  # rules/roadmap.md is reworded for Bob on purpose
         assert (ROOT / src_file).read_bytes() == (BOB / bob_file).read_bytes(), f"copy src/{src_file} to .bob/tricklord/{bob_file}"
 
 
