@@ -1,3 +1,4 @@
+<!-- tricklord -->
 # Roadmap and status
 
 Plan: `PLAN.md`. This file is the live status board. **Rule: whenever an item is finished, tick it here in the same commit**, and add a dated line under "Change log". Never edit `PLAN.md` to record progress; it is the plan, this is the state.

@@ -1,6 +1,6 @@
 {
   "name": "tricklord",
-  "version": "0.2.0",
+  "version": "0.3.1",
   "description": "Plan-first projects: map code in LAYOUT.md, plan in PLAN.md, track in ROADMAP.md, and keep both current as work lands.",
   "author": { "name": "Nguyen Le Hoang" }
 }

@@ -25,7 +25,7 @@ If `LAYOUT.md` already exists, update it in place instead of starting over, and 
 - **Database**: every table or collection with its key fields and relations, plus the file that defines it. Write "No database." if there is none.
 - **Logic**: one line per piece of business logic: what it does, and `file:function` where it lives.
 
-It is a map, not documentation: one line per entry, no code. It is loaded into every session, so aim for about 100 lines; for a large project, stay at module level. Check that every path you write exists.
+It is a map, not documentation: one line per entry, no code. Session start loads it only while everything fits in about 8,000 characters (roughly 3,500 left for the layout when the project also has a roadmap); a longer layout is only pointed to. So keep it tight, and for a large project stay at module level. Check that every path you write exists.
 
 ## 3. Report
 

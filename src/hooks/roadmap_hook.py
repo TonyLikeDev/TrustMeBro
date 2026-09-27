@@ -1,30 +1,32 @@
 #!/usr/bin/env python3
-"""tricklord hooks.
+"""tricklord hooks. Only files carrying the `<!-- tricklord -->` marker count.
 
-start: with LAYOUT.md, load the layout rules and the layout itself. With ROADMAP.md, load the
-       roadmap rules, progress and next actions. With only a plan file, flag it as an unapproved draft.
-stop:  after code changes that left ROADMAP.md untouched, or files added/removed/renamed that left
-       LAYOUT.md untouched, ask Claude once to update them.
+start: load the layout and roadmap rules, the progress headline, the next actions and, if it
+       fits the budget, LAYOUT.md itself. With only a plan, flag it as an unapproved draft.
+edit:  (PostToolUse on Edit/Write) record the edited file for this session.
+stop:  if files were edited this turn without touching ROADMAP.md, or new files were created
+       without touching LAYOUT.md, ask Claude once to update them.
 """
-import hashlib
 import json
 import os
 import re
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 PLUGIN = Path(__file__).resolve().parent.parent
 DIRS = ["", "teamsource", "docs", "research_docs"]
-LAYOUT_BUDGET = 6000  # characters of LAYOUT.md loaded into the session; longer ones are only pointed to
+MARKER = "<!-- tricklord -->"
+BUDGET = 8000  # characters printed at session start; Claude Code shortens long hook output
 
 ROADMAP_REMINDER = (
-    "Code changed but {roadmap} was not touched. If this work finished or advanced a roadmap item, "
+    "Files were edited this turn but {roadmap} was not. If this work finished or advanced a roadmap item, "
     "tick it now ([x] with its evidence, [~] if written but not verified), add a dated Change log line, "
     "and refresh progress with: {cmd}."
 )
 LAYOUT_REMINDER = (
-    "Files were added, removed or renamed but {layout} was not touched. If a folder, component, table "
+    "New files were created this turn but {layout} was not updated. If a folder, component, table "
     "or piece of logic changed, update {layout}."
 )
 
@@ -32,8 +34,9 @@ LAYOUT_REMINDER = (
 def find(project, *names):
     for d in DIRS:
         for name in names:
-            if (project / d / name).is_file():
-                return project / d / name
+            p = project / d / name
+            if p.is_file() and MARKER in p.read_text(encoding="utf-8", errors="ignore"):
+                return p
     return None
 
 
@@ -58,69 +61,83 @@ def git(project, *args):
     return r.stdout if r.returncode == 0 else None
 
 
+def edit_log(data):
+    return Path(tempfile.gettempdir()) / f"tricklord-{data.get('session_id', 'default')}.log"
+
+
 def start(project, data):
     layout = find(project, "LAYOUT.md")
     roadmap = find(project, "ROADMAP.md")
     plan = find(project, "PLAN.md", "RESEARCH_PLAN.md")
+    parts = []
     if layout:
-        print(rules("layout", {
+        parts.append(rules("layout", {
             "layout": rel(project, layout),
             "templates": (PLUGIN / "templates").as_posix(),
             "progress_cmd": progress_cmd(project, roadmap or project / "ROADMAP.md"),
         }))
-        text = layout.read_text(encoding="utf-8")
-        if len(text) <= LAYOUT_BUDGET:
-            print(f"\n## Contents of {rel(project, layout)}\n\n{text}")
-        else:
-            print(f"\n`{rel(project, layout)}` is too long to load here; read it before searching the code.")
     if roadmap:
-        print(rules("roadmap", {
+        parts.append(rules("roadmap", {
             "roadmap": rel(project, roadmap),
             "plan": f"`{rel(project, plan)}`" if plan else "none (no plan file)",
             "progress_cmd": progress_cmd(project, roadmap),
         }))
         text = roadmap.read_text(encoding="utf-8")
-        progress = re.search(r"<!-- progress:start -->(.*?)<!-- progress:end -->", text, re.S)
+        headline = re.search(r"<!-- progress:start -->\s*(\*\*Progress[^\n]*)", text)
         actions = re.search(r"^## [^\n]*next actions[^\n]*\n(.*?)(?=^## |\Z)", text, re.S | re.M | re.I)
-        if progress:
-            print("\n## Current progress\n\n" + progress.group(1).strip())
+        if headline:
+            parts.append("## Current progress\n\n" + headline.group(1).strip())
         tier2 = project / ".bob/context/current-phase.md"
         if tier2.is_file():
-            print("\n## Active Phase Snapshot (Tier 2 Context)\n\n" + tier2.read_text(encoding="utf-8").strip())
+            parts.append("## Active Phase Snapshot (Tier 2 Context)\n\n" + tier2.read_text(encoding="utf-8").strip())
         if actions:
-            print("\n## Next actions\n\n" + actions.group(1).strip())
+            parts.append("## Next actions\n\n" + actions.group(1).strip())
     elif plan:
-        print(f"tricklord: `{rel(project, plan)}` is a draft plan waiting for the user's approval (no ROADMAP.md yet). "
-              "Read it before anything else. Don't start building; when the user approves, follow stage 2 of the "
-              "roadmap-planner skill.")
+        parts.append(f"tricklord: `{rel(project, plan)}` is a draft plan waiting for the user's approval (no ROADMAP.md "
+                     "yet). Read it before anything else. Don't start building; when the user approves, follow stage 2 "
+                     "of the roadmap-planner skill.")
+    if layout:
+        # rules, progress and next actions always load; the layout itself only if it still fits
+        block = f"## Contents of {rel(project, layout)}\n\n{layout.read_text(encoding='utf-8')}"
+        room = BUDGET - len("\n\n".join(parts)) - 2
+        parts.append(block if len(block) <= room else
+                     f"`{rel(project, layout)}` is too long to load here; read it before searching the code.")
+    if parts:
+        print("\n\n".join(parts))
+
+
+def edit(project, data):
+    tool_input = data.get("tool_input") or {}
+    # Bob uses "path"; Claude Code uses "file_path" / "notebook_path"
+    path = tool_input.get("path") or tool_input.get("file_path") or tool_input.get("notebook_path")
+    if path:
+        with edit_log(data).open("a", encoding="utf-8") as f:
+            f.write(path + "\n")
 
 
 def stop(project, data):
+    log = edit_log(data)
+    if not log.is_file():
+        return
+    # ponytail: only Edit/Write tools are recorded; files changed through shell commands are missed (BUG-012)
+    edited = {Path(p).resolve() for p in log.read_text(encoding="utf-8").splitlines() if p}
+    log.unlink()
     if data.get("stop_hook_active"):
         return
-    status = git(project, "status", "--porcelain", "--untracked-files=all")
-    if not status:
-        return  # clean tree or not a git repo
-
-    def untouched(path):
-        return path and not git(project, "status", "--porcelain", "--", str(path))
-
-    notes = []
     roadmap, layout = find(project, "ROADMAP.md"), find(project, "LAYOUT.md")
-    if untouched(roadmap):
+    docs = {p for p in (roadmap, layout, find(project, "PLAN.md", "RESEARCH_PLAN.md")) if p}
+    code = [p for p in edited if project in p.parents and p not in docs]
+    if not code:
+        return
+    notes = []
+    if roadmap and roadmap not in edited:
         notes.append(ROADMAP_REMINDER.format(roadmap=rel(project, roadmap), cmd=progress_cmd(project, roadmap)))
-    if untouched(layout) and re.search(r"^(\?\?|[ADR].|.[ADR]) ", status, re.M):
-        notes.append(LAYOUT_REMINDER.format(layout=rel(project, layout)))
-    if not notes:
-        return
-    # ponytail: can't tell this turn's edits from older uncommitted ones, so it asks once per new working-tree state
-    fingerprint = hashlib.sha1((status + (git(project, "diff", "HEAD") or "")).encode()).hexdigest()
-    mark = project / git(project, "rev-parse", "--git-path", "tricklord-stop").strip()
-    if mark.is_file() and mark.read_text() == fingerprint:
-        return
-    mark.write_text(fingerprint)
-    notes.append("If none of this applies to the change, say so in one line and stop.")
-    print(json.dumps({"decision": "block", "reason": " ".join(notes)}))
+    if layout and layout not in edited and git(project, "rev-parse", "--is-inside-work-tree"):
+        if any(p.exists() and git(project, "ls-files", "--error-unmatch", "--", str(p)) is None for p in code):
+            notes.append(LAYOUT_REMINDER.format(layout=rel(project, layout)))
+    if notes:
+        notes.append("If none of this applies to the change, say so in one line and stop.")
+        print(json.dumps({"decision": "block", "reason": " ".join(notes)}))
 
 
 if __name__ == "__main__":
@@ -128,6 +145,6 @@ if __name__ == "__main__":
     try:
         data = json.loads(sys.stdin.read() or "{}")
         project = Path(os.environ.get("CLAUDE_PROJECT_DIR") or data.get("cwd") or ".").resolve()
-        {"start": start, "stop": stop}[sys.argv[1]](project, data)
+        {"start": start, "edit": edit, "stop": stop}[sys.argv[1]](project, data)
     except Exception as e:  # a broken hook must never break the session
         print(f"tricklord hook: {e}", file=sys.stderr)
