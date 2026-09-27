@@ -27,9 +27,17 @@ RoadmapFlow is a deterministic plan-first context engine and Claude/Gemini plugi
 │   │   ├── LAYOUT.md           System architecture layout template
 │   │   ├── PLAN.md             Static master plan template
 │   │   └── ROADMAP.md          Live status board template
-│   ├── scripts/                Progress recalculation helper
-│   │   └── roadmap_progress.py Recalculates progress block from checkboxes
+│   ├── scripts/                Progress recalculation & session extraction helpers
+│   │   ├── roadmap_progress.py Recalculates progress block from checkboxes
+│   │   └── export_bob_sessions.py Extracts all sessions directly from ~/.bob/db/bob.db
 │   └── skills/                 Skill definitions for AI agents
+├── big_project_report/          Testing reports and benchmark dossiers (baseline vs RoadmapFlow)
+├── bob_sessions/                Empirical IBM Bob session transcripts, raw JSON database export, and testbed artifacts
+│   ├── FULL_REPORT.md           Full engineering stabilization report on Tracker_yourMoney
+│   ├── all_bob_sessions.json    Complete raw session export from Bob SQLite database
+│   ├── session_logs/            12 structured session transcripts and SUMMARY.md
+│   └── testbed_tracker_yourmoney/ Supporting testbed evaluation artifacts
+├── envidence/                   Visual verification screenshots and execution evidence (aliased as evidence/)
 ├── planning/                    Hackathon strategy, guidelines, problem statement, and checklist docs
 ├── docs/                        Benchmark reports and hackathon guide summaries
 │   ├── BENCHMARK_REPORT.md     Measured token reduction benchmark output
@@ -37,6 +45,7 @@ RoadmapFlow is a deterministic plan-first context engine and Claude/Gemini plugi
 ├── teamsource/                  Reference dataset (sample research plan & roadmap for benchmarking)
 │   ├── RESEARCH_PLAN.md        Reference master plan
 │   └── ROADMAP.md              Reference status board
+├── slides/                      Presentation decks and hackathon pitch slides
 ├── scripts/                     Shell and python utility scripts for task ticking and phase verification
 ├── tests/                       Unit test suite for plugin and engine verification
 └── things/                      Output directory for generated JSON benchmarks
@@ -51,15 +60,18 @@ RoadmapFlow is a deterministic plan-first context engine and Claude/Gemini plugi
 | Token Benchmark Engine | `src/benchmark.py` | Simulates 10 developer sessions and measures token savings | `src/roadmap.py` |
 | Lifecycle Hooks | `src/hooks/roadmap_hook.py` | Session start context injection and stop reminder | `src/roadmap.py` |
 | Progress Calculator | `src/scripts/roadmap_progress.py` | Recalculates checkbox progress bars in-place | `src/roadmap.py` |
+| Bob Session Extractor | `src/scripts/export_bob_sessions.py` | Parses and extracts raw session logs, token spend, and messages from Bob SQLite database | `sqlite3`, stdlib |
 
 **Flows**
 - Session Start Flow: `roadmap_hook.py` → reads `LAYOUT.md` & `.bob/context/current-phase.md` → injects minimal context to LLM session.
 - Progress Sync Flow: Developer ticks `[x]` → `roadmap_progress.py` / `roadmap.py progress` → updates progress bar & Change Log in `ROADMAP.md`.
 - Benchmark Flow: `benchmark.py` → reads `teamsource/ROADMAP.md` → measures Tier 1/2 vs Baseline tokens → outputs `docs/BENCHMARK_REPORT.md`.
+- Evaluation Flow: `export_bob_sessions.py` → queries `~/.bob/db/bob.db` → extracts Markdown transcripts to `bob_sessions/session_logs/` and JSON to `bob_sessions/all_bob_sessions.json`.
 
 ## Database
 
-No database. (Pure file-based markdown and deterministic Python CLI engine).
+- **Core Engine**: Zero runtime database dependencies (pure file-based Markdown and deterministic Python CLI).
+- **Evaluation & Analytics**: Integrates with IBM Bob's internal SQLite database (`~/.bob/db/bob.db`) for empirical benchmarking, auditing conversation turns, API costs, error cycles, and token usage.
 
 ## Logic
 

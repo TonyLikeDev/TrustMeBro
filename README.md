@@ -99,25 +99,24 @@ Before touching a single line of code, IBM Bob stops at the first rung that hold
 │   │   └── ROADMAP.md                    Live status board template
 │   └── skills/                           Agent skills (project-roadmap, roadmap-navigator, etc.)
 │
-├── Tracker_yourMoney/                    LIVE TESTBED MONOREPO (Benchmark Subject)
-│   ├── apps/
-│   │   ├── api/                          Standalone Hono REST API (Port 3001)
-│   │   ├── web/                          Next.js 16 App Router Frontend (Port 3000)
-│   │   └── worker/                       Recurring bill processor service
-│   ├── packages/
-│   │   ├── db/                           Drizzle ORM + PostgreSQL client & migrations
-│   │   ├── api-client/                   Typed Axios API client
-│   │   ├── shared-schemas/               Shared Zod validation schemas
-│   │   └── cache/                        In-memory caching interface
-│   ├── LAYOUT.md                         Living architectural map of 4 apps/pkgs & 14 tables
-│   ├── bob-session/                      Exported IBM Bob sessions & raw transcripts
-│   │   ├── all_bob_sessions.json         Machine-readable SQLite session dump
-│   │   └── SUMMARY.md                    Detailed breakdown of all 12 Bob sessions
-│   └── docker-compose.yml                Local PostgreSQL 16 + Redis 7 services
+├── big_project_report/                   Comprehensive Testing & Comparative Evaluation Dossiers
+│   ├── CODE_QUALITY_REPORT.md            Code quality and maintainability evaluation
+│   ├── NO-SKILL-VS-BOB-M1-3.md           Head-to-head empirical comparison across milestones 1-3
+│   ├── GEMINI_WITH_SKILL.md              Evaluation of skill-directed agent behavior
+│   ├── DEDUP_REPORT.md                   Context deduplication analysis
+│   ├── TEST_PLAN.md                      Formal test plan and validation harness
+│   └── TEST_ROADMAP.md                   Testing roadmap and execution status
 │
-├── bob_sessions/                         IBM Bob 2.0 Historical Transcripts & Session Logs
+├── bob_sessions/                         IBM Bob 2.0 Historical Transcripts & Session Dossiers
+│   ├── FULL_REPORT.md                    Engineering report on Tracker_yourMoney monorepo stabilization
+│   ├── all_bob_sessions.json             Complete SQLite database session dump (~2.8 MB)
 │   ├── session_logs/                     Raw markdown transcripts for all 12 sessions
+│   ├── testbed_tracker_yourmoney/        Supporting testbed layout & deployment artifacts
 │   └── plugin_tests/                     Live test logs for Tricklord plugin integration
+│
+├── envidence/                            Visual Verification & Photographic Proof (evidence/)
+│   ├── Pasted image.png                  Runtime verification screenshot
+│   └── Screenshot From 2026-09-27...png  Terminal output and status verification
 │
 ├── docs/                                 Documentation & Formal Benchmark Reports
 │   ├── BENCHMARK_REPORT.md               Formal token optimization report (91.8% savings)
