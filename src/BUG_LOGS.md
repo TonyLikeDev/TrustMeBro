@@ -21,6 +21,9 @@ Known flaws in the tricklord plugin. One entry per bug. When one is fixed, set i
 | BUG-015 | Minor | README does not document `dedup-merge` and `orchestrator` | fixed (v0.3.1) |
 | BUG-016 | Minor | `dedup-merge` is written for one specific project | fixed (v0.3.1) |
 | BUG-017 | Minor | `orchestrator` description triggers on any vague request | open |
+| BUG-018 | Serious | Bob `Stop` and `PostToolUse` hooks do nothing | fixed (v0.4.0) |
+| BUG-019 | Serious | Bob port only works inside this repo | fixed (v0.4.0) |
+| BUG-020 | Serious | New tasks are not put on the roadmap automatically | fixed (v0.4.0) |
 
 ---
 
@@ -157,3 +160,24 @@ Known flaws in the tricklord plugin. One entry per bug. When one is fixed, set i
 - **Where:** `skills/orchestrator/SKILL.md`, `description`
 - **What happens:** "Use when the request is vague" matches many ordinary requests, so Claude may load the skill when it isn't needed, costing context each time.
 - **Fix idea:** narrow the trigger to project-level questions ("what should I do next", "where do I start", "which skill"), and leave vague coding requests alone.
+
+### BUG-018: Bob `Stop` and `PostToolUse` hooks do nothing
+
+- **Severity:** serious · **Found:** 2026-09-27 · **Status:** fixed (v0.4.0)
+- **Where:** `.bob/settings.json`
+- **What happens:** the Bob port copied the Claude Code hooks, but per Bob's lifecycle-hooks docs (bob.ibm.com/docs/ide/configuration/lifecycle-hooks) Bob ignores the stdout of `PostToolUse` and `Stop`, has no `{"decision": "block"}`, and sends tool arguments as `input` (not `tool_input`). So the edit log and the end-of-reply reminder never worked in Bob. Only `SessionStart` and `UserPromptSubmit` output reaches Bob's context.
+- **Fix (v0.4.0):** `.bob/settings.json` now registers only `UserPromptSubmit` (the new-task reminder, BUG-020). The layout and roadmap rules reach Bob through `.bob/rules/tricklord.md`, which Bob always loads.
+
+### BUG-019: Bob port only works inside this repo
+
+- **Severity:** serious · **Found:** 2026-09-27 · **Status:** fixed (v0.4.0)
+- **Where:** `.bob/settings.json`, `.bob/rules/tricklord.md`, `.bob/skills/*/SKILL.md`
+- **What happens:** hook commands, templates and the progress script were referenced as `src/hooks/...`, `src/templates/...`, `src/scripts/...`. Copying `.bob/` into another project, as the README and the submission describe, left every one of those paths broken.
+- **Fix (v0.4.0):** `.bob/tricklord/` holds copies of `src/hooks/roadmap_hook.py`, `src/scripts/roadmap_progress.py` and the three templates; every Bob path points there. `test_bob_copy` fails if a copy drifts from `src/`.
+
+### BUG-020: New tasks are not put on the roadmap automatically
+
+- **Severity:** serious · **Found:** 2026-09-27 (reported from Bob) · **Status:** fixed (v0.4.0)
+- **Where:** `rules/layout.md`, `.bob/rules/tricklord.md`, `hooks/roadmap_hook.py`
+- **What happens:** with a `LAYOUT.md` and a new task, Bob did not create or update a roadmap. The rule covered only features ("not a bug fix or a small tweak"), nothing fired when a task arrived (Bob's only reminder was a rule in its system prompt), and in live tests a model asked to create the roadmap wrote its own stripped-down version without the `<!-- tricklord -->` marker or progress markers.
+- **Fix (v0.4.0):** every new task that changes the project is recorded before the work (feature → `## Feature <n>` phase; fix or small change → item under `## Maintenance: fixes and small changes`; big work → phase with `[ ] Plan approved by the user` and no code until approved). A new `prompt` hook on `UserPromptSubmit` (Claude Code and Bob) reminds the AI with every prompt, and when a marked `LAYOUT.md` has no roadmap it creates `ROADMAP.md` itself from the template, so the format is always right; a repo's own unmarked `ROADMAP.md` is never touched. Verified live in Claude Code (`claude -p`, Sonnet 5): the hook created the roadmap, the task was recorded under Maintenance before `app.py` was edited, then ticked, and `LAYOUT.md` was updated. **Not yet verified in Bob**: `bob run` needs `BOB_API_KEY`, which this test environment did not have.

@@ -7,7 +7,7 @@ description: Map an existing codebase into LAYOUT.md, covering the folder tree w
 
 Write `LAYOUT.md` in the project root: a map that lets anyone, including Bob in a later session, find where things are and where a new addition fits without rereading the code. Every entry comes from the code and names its file.
 
-Template: `src/templates/LAYOUT.md`.
+Template: `.bob/tricklord/templates/LAYOUT.md`.
 
 If `LAYOUT.md` already exists, update it in place instead of starting over, and report what changed.
 

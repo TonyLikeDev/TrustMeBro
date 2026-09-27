@@ -21,16 +21,19 @@
 
 (Also reachable as `/tricklord:roadmap-planner` and so on. In Bob, skills activate automatically when a request matches their description.)
 
-**Adding something** to a project with `LAYOUT.md`: just ask. The AI finds where it fits in the layout, then sizes it. A small addition becomes a new phase in `ROADMAP.md` and work starts; a big one (new component, database change, several days) is planned first and waits for your approval.
+**Every new task goes on the roadmap** in a project with `LAYOUT.md`: just ask. Before doing the work, the AI records the task in `ROADMAP.md` (created automatically if missing) and tells you in one line: a feature becomes a new phase, a fix or small change an item under `## Maintenance: fixes and small changes`, and big work (new component, database change, several days) gets a plan that waits for your approval. Questions and follow-ups to the current task don't get an entry.
 
 ## What happens automatically
 
 Only files whose first line is `<!-- tricklord -->` count (the templates add it), so a repo's own `PLAN.md` or `ROADMAP.md` is left alone.
 
+- **Every prompt, `LAYOUT.md` or `ROADMAP.md` present** (Claude Code and Bob): the AI is reminded to put a new task on the roadmap before working on it. If there is a `LAYOUT.md` but no roadmap yet, the hook creates an empty `ROADMAP.md` from the template first.
 - **Session start, `LAYOUT.md` present**: the AI gets the layout rules and the layout itself if everything fits in about 8,000 characters (otherwise a pointer to it).
 - **Session start, `ROADMAP.md` present** (project root, `docs/` or `research_docs/`): the AI gets the roadmap rules, the progress headline, and the next actions, and reads the roadmap before the code.
 - **Session start, plan but no roadmap**: the AI is told the plan is an unapproved draft and not to start building.
-- **End of a reply in which the AI edited files but not the roadmap**, or created new files but not the layout: the AI is asked once to update them. Replies with no edits stay quiet.
+- **End of a reply in which the AI edited files but not the roadmap**, or created new files but not the layout: the AI is asked once to update them. Replies with no edits stay quiet. Claude Code only: Bob ignores the output of `Stop` and `PostToolUse` hooks, so in Bob the rules in `.bob/rules/tricklord.md` carry this instead.
+
+The session-start items are Claude Code only; in Bob the same rules are always loaded from `.bob/rules/tricklord.md`.
 
 Edit `src/rules/` to change how the AI maintains the layout and roadmap, and `src/templates/` to change the document format.
 
@@ -50,8 +53,8 @@ src/
 │   ├── dedup-merge/SKILL.md     /dedup-merge: merge copy-pasted code into shared implementations
 │   └── orchestrator/SKILL.md    /orchestrator: pick the next skill from the project's state
 ├── hooks/
-│   ├── hooks.json               registers the SessionStart, PostToolUse and Stop hooks
-│   └── roadmap_hook.py          start: load rules and state; edit: record edited files; stop: reminder
+│   ├── hooks.json               registers the SessionStart, UserPromptSubmit, PostToolUse and Stop hooks
+│   └── roadmap_hook.py          start: rules and state; prompt: new-task reminder; edit: log edits; stop: reminder
 ├── rules/
 │   ├── layout.md                loaded when LAYOUT.md exists: keep it current, how to add something
 │   └── roadmap.md               loaded when ROADMAP.md exists: tick, log, progress, deviations
@@ -73,9 +76,10 @@ src/
 └── README.md                    This documentation
 
 .bob/                            IBM Bob integration (auto-discovered by Bob)
-├── settings.json                hooks: SessionStart, PostToolUse, Stop
+├── settings.json                hook: UserPromptSubmit (new-task reminder, creates ROADMAP.md if missing)
 ├── rules/
 │   └── tricklord.md             layout + roadmap rules, always in context
+├── tricklord/                   copies of src/hooks, src/scripts and src/templates, so .bob/ works in any project
 └── skills/
     ├── roadmap-planner/SKILL.md Bob skill: plan a project or big feature
     ├── layout-init/SKILL.md     Bob skill: map an existing codebase
@@ -107,13 +111,13 @@ claude --plugin-dir /path/to/tricklord/src
 
 ### Installation — IBM Bob
 
-The `.bob/` folder is already part of the repo. Open this workspace in Bob and everything activates automatically:
+Copy the `.bob/` folder into your project and open it in Bob; everything it needs is inside it:
 
 - Skills (`roadmap-planner`, `layout-init`, `roadmap-sync`) are discovered from `.bob/skills/`.
-- Hooks in `.bob/settings.json` fire on session start, file edits, and session stop.
+- The `UserPromptSubmit` hook in `.bob/settings.json` runs `.bob/tricklord/hooks/roadmap_hook.py` on every prompt (Bob adds its output to the context).
 - Rules in `.bob/rules/tricklord.md` are always in context.
 
-No install step needed — just open the project in Bob.
+No install step beyond the copy. Bob only adds the output of `SessionStart` and `UserPromptSubmit` hooks to the context, so the end-of-reply reminders are Claude Code only. The files in `.bob/tricklord/` are copies of `src/`: after changing `src/`, copy them again (`tests/test_plugin.py` fails until you do).
 
 ---
 
