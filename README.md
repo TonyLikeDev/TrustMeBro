@@ -57,6 +57,7 @@ src/
 │   └── roadmap_progress.py      regenerates the progress block from the checkboxes
 ├── tests/
 │   └── test_plugin.py           checks the progress math and both hooks
+├── BUG_LOGS.md                  known flaws, their status and fix ideas
 ├── research_docs/               example plan and roadmap from a real project
 ├── __init__.py                  package marker
 ├── roadmap.py                   Deterministic Roadmap & Context Engine (CLI + domain logic)
