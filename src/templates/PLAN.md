@@ -1,3 +1,4 @@
+<!-- tricklord -->
 # Plan: <project title>
 
 <One paragraph: what this project is, which source documents this plan merges (if any), and how the schedule works. Every phase lists what to build, what to measure, and what to write down, so the final deliverables are assembled from the phase outputs instead of written from scratch.>
