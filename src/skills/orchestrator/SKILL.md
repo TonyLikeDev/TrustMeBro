@@ -1,6 +1,6 @@
 ---
 name: orchestrator
-description: Routes work between the tricklord skills (layout-init, roadmap-planner, roadmap-sync, dedup-merge) and says which to run next. Use when the request is vague, spans several skills, or the user asks what to do next.
+description: Routes work between the TrustMeBro skills (layout-init, roadmap-planner, roadmap-sync, dedup-merge) and says which to run next. Use when the request is vague, spans several skills, or the user asks what to do next.
 ---
 
 # Orchestrator
@@ -11,7 +11,7 @@ Pick the skill from project state, run it, then hand off. Suggest a skill; get t
 
 `LAYOUT.md`, `PLAN.md` (or `RESEARCH_PLAN.md`) and `ROADMAP.md` in the project root, `docs/` and `research_docs/`, and whether there is code.
 
-A file counts only if its first line is `<!-- tricklord -->` (check with `head -n 1`). Without the marker it belongs to the repo, not to tricklord: treat it as absent and never edit it. One exception: a `ROADMAP.md` that has `<!-- progress:start -->` but no marker is a tricklord roadmap from before the marker existed; offer `roadmap-sync` to add it.
+A file counts only if its first line is `<!-- trustmebro -->` (check with `head -n 1`). Without the marker it belongs to the repo, not to TrustMeBro: treat it as absent and never edit it. One exception: a `ROADMAP.md` that has `<!-- progress:start -->` but no marker is a TrustMeBro roadmap from before the marker existed; offer `roadmap-sync` to add it.
 
 ## Pick
 

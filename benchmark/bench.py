@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Benchmark: the same coding tasks with and without tricklord.
+"""Benchmark: the same coding tasks with and without TrustMeBro.
 
-Every run gets a fresh copy of a small project (app.py and a tricklord LAYOUT.md, no roadmap). The two setups
-differ only in tricklord: `base` is the agent as it is, `tricklord` adds the plugin (Claude Code) or the .bob/
+Every run gets a fresh copy of a small project (app.py and a TrustMeBro LAYOUT.md, no roadmap). The two setups
+differ only in TrustMeBro: `base` is the agent as it is, `trustmebro` adds the plugin (Claude Code) or the .bob/
 folder (IBM Bob). Each run is scored from the files it leaves behind and the order of its edits.
 
   python3 benchmark/bench.py run --agent claude [--reps 2] [--model sonnet]
@@ -35,7 +35,7 @@ APP = '''def add(a, b):
 def subtract(a, b):
     return b - a
 '''
-LAYOUT = '''<!-- tricklord -->
+LAYOUT = '''<!-- trustmebro -->
 # Project layout
 
 Last updated: 2026-09-27.
@@ -65,10 +65,10 @@ BOB_WRITE_TOOLS = {"write_to_file", "write_file", "apply_diff", "insert_content"
 
 
 def fixture(setup, agent):
-    d = Path(tempfile.mkdtemp(prefix=f"tricklord-bench-{agent}-{setup}-"))
+    d = Path(tempfile.mkdtemp(prefix=f"trustmebro-bench-{agent}-{setup}-"))
     (d / "app.py").write_text(APP)
     (d / "LAYOUT.md").write_text(LAYOUT)
-    if agent == "bob" and setup == "tricklord":
+    if agent == "bob" and setup == "trustmebro":
         shutil.copytree(REPO / ".bob", d / ".bob", ignore=shutil.ignore_patterns(".DS_Store"))
     git = ["git", "-c", "user.name=bench", "-c", "user.email=bench@example.com"]
     subprocess.run(git[:1] + ["init", "-q"], cwd=d, check=True)
@@ -80,7 +80,7 @@ def fixture(setup, agent):
 def run_claude(d, setup, prompt, model):
     cmd = ["claude", "-p", prompt, "--model", model, "--permission-mode", "acceptEdits", "--allowedTools", "Bash",
            "--output-format", "stream-json", "--verbose"]
-    if setup == "tricklord":
+    if setup == "trustmebro":
         cmd += ["--plugin-dir", str(REPO / "src")]
     out = subprocess.run(cmd, cwd=d, capture_output=True, text=True, stdin=subprocess.DEVNULL).stdout
     edits, tools, cost, seconds = [], 0, 0.0, 0.0
@@ -142,7 +142,7 @@ def one(agent, setup, task, rep, model):
 
 def run(args):
     model = args.model if args.agent == "claude" else "bob default"
-    jobs = [(args.agent, s, t, r, model) for r in range(1, args.reps + 1) for t in TASKS for s in ("base", "tricklord")]
+    jobs = [(args.agent, s, t, r, model) for r in range(1, args.reps + 1) for t in TASKS for s in ("base", "trustmebro")]
     with ThreadPoolExecutor(args.workers) as pool:
         rows = list(pool.map(lambda j: one(*j), jobs))
     new = not RESULTS.exists()
@@ -178,7 +178,7 @@ THEMES = {  # dataviz reference palette: chart chrome + categorical slots 1-2, v
 }
 METRICS = [("recorded", "Task put on the roadmap"), ("recorded_first", "... before any code was written"),
            ("layout_current", "LAYOUT.md kept up to date"), ("correct", "Task done correctly")]
-SETUPS = [("tricklord", "With tricklord", "s1"), ("base", "Without tricklord (base agent)", "s2")]
+SETUPS = [("trustmebro", "With TrustMeBro", "s1"), ("base", "Without TrustMeBro (base agent)", "s2")]
 AGENTS = {"claude": "Claude Code", "bob": "IBM Bob"}
 FONT = 'font-family="system-ui, -apple-system, Segoe UI, sans-serif"'
 
@@ -234,7 +234,7 @@ def chart(theme):
     H = y + 4
     body = "\n  ".join(out)
     return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" {FONT} role="img" '
-            f'aria-label="Benchmark: agent with and without tricklord">\n  <rect width="{W}" height="{H}" rx="8" fill="{c["surface"]}"/>\n  {body}\n</svg>\n')
+            f'aria-label="Benchmark: agent with and without TrustMeBro">\n  <rect width="{W}" height="{H}" rx="8" fill="{c["surface"]}"/>\n  {body}\n</svg>\n')
 
 
 def report(args):

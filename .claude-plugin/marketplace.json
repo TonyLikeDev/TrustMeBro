@@ -1,10 +1,10 @@
 {
-  "name": "tricklord",
+  "name": "trustmebro",
   "description": "Plan-first project workflow for Claude Code.",
   "owner": { "name": "Nguyen Le Hoang" },
   "plugins": [
     {
-      "name": "tricklord",
+      "name": "trustmebro",
       "source": "./src",
       "description": "Plan-first projects: PLAN.md, a live ROADMAP.md, and Claude keeping it current."
     }

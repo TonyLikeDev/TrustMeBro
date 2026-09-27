@@ -1,6 +1,6 @@
 # Bug log
 
-Known flaws in the tricklord plugin. One entry per bug. When one is fixed, set its status to `fixed (<version>)` in both the table and the entry and replace **Fix idea** with what was done; `wontfix (<reason>)` if it is dropped.
+Known flaws in the TrustMeBro plugin. One entry per bug. When one is fixed, set its status to `fixed (<version>)` in both the table and the entry and replace **Fix idea** with what was done; `wontfix (<reason>)` if it is dropped.
 
 | ID | Severity | Title | Status |
 | :--- | :--- | :--- | :--- |
@@ -17,14 +17,14 @@ Known flaws in the tricklord plugin. One entry per bug. When one is fixed, set i
 | BUG-011 | Minor | Example docs publish personal information | open |
 | BUG-012 | Medium | File changes made through shell commands are not seen | open |
 | BUG-013 | Minor | Progress refresh needs a Bash permission on every tick | open |
-| BUG-014 | Medium | `orchestrator` ignores the tricklord marker | fixed (v0.3.1) |
+| BUG-014 | Medium | `orchestrator` ignores the TrustMeBro marker | fixed (v0.3.1) |
 | BUG-015 | Minor | README does not document `dedup-merge` and `orchestrator` | fixed (v0.3.1) |
 | BUG-016 | Minor | `dedup-merge` is written for one specific project | fixed (v0.3.1) |
 | BUG-017 | Minor | `orchestrator` description triggers on any vague request | open |
 | BUG-018 | Serious | Bob `Stop` and `PostToolUse` hooks do nothing | fixed (v0.4.0) |
 | BUG-019 | Serious | Bob port only works inside this repo | fixed (v0.4.0) |
 | BUG-020 | Serious | New tasks are not put on the roadmap automatically | fixed (v0.4.0) |
-| BUG-021 | Minor | Bob loads the tricklord rules twice | open |
+| BUG-021 | Minor | Bob loads the TrustMeBro rules twice | open |
 | BUG-022 | Medium | The roadmap entry is sometimes written after the code | open |
 
 ---
@@ -40,13 +40,13 @@ Known flaws in the tricklord plugin. One entry per bug. When one is fixed, set i
   echo '{}' | CLAUDE_PROJECT_DIR=/tmp/other python3 hooks/roadmap_hook.py start
   # prints the "Don't start building" notice
   ```
-- **Fix (v0.3.0):** the three templates start with `<!-- tricklord -->`, and `find()` in `hooks/roadmap_hook.py` only accepts files containing it. `/roadmap-sync` adds the line to older files. Covered by `test_start` (an unmarked `PLAN.md` produces no output). Verified live 2026-09-27 (`claude -p --plugin-dir src`, Claude Code 2.1.283, macOS): in a project with an unmarked `PLAN.md`, the tricklord SessionStart hook printed nothing.
+- **Fix (v0.3.0):** the three templates start with `<!-- trustmebro -->`, and `find()` in `hooks/roadmap_hook.py` only accepts files containing it. `/roadmap-sync` adds the line to older files. Covered by `test_start` (an unmarked `PLAN.md` produces no output). Verified live 2026-09-27 (`claude -p --plugin-dir src`, Claude Code 2.1.283, macOS): in a project with an unmarked `PLAN.md`, the TrustMeBro SessionStart hook printed nothing.
 
 ### BUG-002: Never tested in a real Claude Code session
 
 - **Severity:** serious · **Found:** 2026-09-27 · **Status:** open
 - **Where:** whole plugin
-- **What happens:** the hooks were verified live on 2026-09-27 on macOS (see BUG-001, BUG-003, BUG-004), including the `PostToolUse` payload. Skills invoked by short name (`/orchestrator`, `/dedup-merge`) were verified live the same day (`bob_sessions/plugin_tests/2026-09-27_tricklord_live_tests.md`). Still unproven:
+- **What happens:** the hooks were verified live on 2026-09-27 on macOS (see BUG-001, BUG-003, BUG-004), including the `PostToolUse` payload. Skills invoked by short name (`/orchestrator`, `/dedup-merge`) were verified live the same day (`bob_sessions/plugin_tests/2026-09-27_trustmebro_live_tests.md`). Still unproven:
   - live runs of `/layout-init`, `/roadmap-planner` and `/roadmap-sync`, including the skills finding `../../templates/` and `../../scripts/` relative to their base directory;
   - the `python3 ... || python ...` hook command on Windows.
 - **Fix idea:** run `claude -p` with `--plugin-dir src` against a small sample project (one run per skill, plus one session with each hook), and test once on the Windows desktop.
@@ -135,12 +135,12 @@ Known flaws in the tricklord plugin. One entry per bug. When one is fixed, set i
 - **What happens:** Claude refreshes the progress block by running the script through Bash with absolute paths. Unless the user has allowed that command, every tick asks for permission; in the live test (`acceptEdits`) the call was blocked, so Claude ticked the item and logged it but the progress block stayed at 0%.
 - **Fix idea:** let the stop hook run the progress script itself whenever `ROADMAP.md` was edited this turn (it already knows from the edit log), and drop the manual refresh step from the rules.
 
-### BUG-014: `orchestrator` ignores the tricklord marker
+### BUG-014: `orchestrator` ignores the TrustMeBro marker
 
 - **Severity:** medium · **Found:** 2026-09-27 · **Status:** fixed (v0.3.1)
 - **Where:** `skills/orchestrator/SKILL.md`, "State to check"
-- **What happens:** the skill decided project state with "one `ls`, no reading", so any `PLAN.md` or `ROADMAP.md` counted as tricklord's, bringing BUG-001 back at the skill level: a repo's own roadmap would be routed to `roadmap-sync`, an unrelated plan to "approve this plan".
-- **Fix (v0.3.1):** a file counts only if its first line is `<!-- tricklord -->` (`head -n 1`); otherwise it is treated as absent and never edited. A `ROADMAP.md` with progress markers but no tricklord marker is recognised as a pre-marker roadmap and gets `roadmap-sync` offered. Verified live (tests S1 to S3 in `bob_sessions/plugin_tests/2026-09-27_tricklord_live_tests.md`).
+- **What happens:** the skill decided project state with "one `ls`, no reading", so any `PLAN.md` or `ROADMAP.md` counted as TrustMeBro's, bringing BUG-001 back at the skill level: a repo's own roadmap would be routed to `roadmap-sync`, an unrelated plan to "approve this plan".
+- **Fix (v0.3.1):** a file counts only if its first line is `<!-- trustmebro -->` (`head -n 1`); otherwise it is treated as absent and never edited. A `ROADMAP.md` with progress markers but no TrustMeBro marker is recognised as a pre-marker roadmap and gets `roadmap-sync` offered. Verified live (tests S1 to S3 in `bob_sessions/plugin_tests/2026-09-27_trustmebro_live_tests.md`).
 
 ### BUG-015: README does not document `dedup-merge` and `orchestrator`
 
@@ -168,32 +168,32 @@ Known flaws in the tricklord plugin. One entry per bug. When one is fixed, set i
 - **Severity:** serious · **Found:** 2026-09-27 · **Status:** fixed (v0.4.0)
 - **Where:** `.bob/settings.json`
 - **What happens:** the Bob port copied the Claude Code hooks, but per Bob's lifecycle-hooks docs (bob.ibm.com/docs/ide/configuration/lifecycle-hooks) Bob ignores the stdout of `PostToolUse` and `Stop`, has no `{"decision": "block"}`, and sends tool arguments as `input` (not `tool_input`). So the edit log and the end-of-reply reminder never worked in Bob. Only `SessionStart` and `UserPromptSubmit` output reaches Bob's context.
-- **Fix (v0.4.0):** `.bob/settings.json` registers only the two events whose output reaches Bob: `UserPromptSubmit` (the new-task reminder, BUG-020) and `SessionStart` (rules, progress headline, next actions; reads the rules from `.bob/tricklord/rules/`, without a matcher since Bob's docs don't define one for this event). Its output reached Bob in the live test: Bob refreshed progress with the exact quoted interpreter-and-script command that only the `SessionStart` rules contain. `PostToolUse` and `Stop` were briefly re-added and removed again. The end-of-reply reminder stays Claude Code only; in Bob, `.bob/rules/tricklord.md` (always loaded) carries it.
+- **Fix (v0.4.0):** `.bob/settings.json` registers only the two events whose output reaches Bob: `UserPromptSubmit` (the new-task reminder, BUG-020) and `SessionStart` (rules, progress headline, next actions; reads the rules from `.bob/trustmebro/rules/`, without a matcher since Bob's docs don't define one for this event). Its output reached Bob in the live test: Bob refreshed progress with the exact quoted interpreter-and-script command that only the `SessionStart` rules contain. `PostToolUse` and `Stop` were briefly re-added and removed again. The end-of-reply reminder stays Claude Code only; in Bob, `.bob/rules/trustmebro.md` (always loaded) carries it.
 
 ### BUG-019: Bob port only works inside this repo
 
 - **Severity:** serious · **Found:** 2026-09-27 · **Status:** fixed (v0.4.0)
-- **Where:** `.bob/settings.json`, `.bob/rules/tricklord.md`, `.bob/skills/*/SKILL.md`
+- **Where:** `.bob/settings.json`, `.bob/rules/trustmebro.md`, `.bob/skills/*/SKILL.md`
 - **What happens:** hook commands, templates and the progress script were referenced as `src/hooks/...`, `src/templates/...`, `src/scripts/...`. Copying `.bob/` into another project, as the README and the submission describe, left every one of those paths broken.
-- **Fix (v0.4.0):** `.bob/tricklord/` holds copies of `src/hooks/roadmap_hook.py`, `src/scripts/roadmap_progress.py` and the three templates; every Bob path points there. `test_bob_copy` fails if a copy drifts from `src/`.
+- **Fix (v0.4.0):** `.bob/trustmebro/` holds copies of `src/hooks/roadmap_hook.py`, `src/scripts/roadmap_progress.py` and the three templates; every Bob path points there. `test_bob_copy` fails if a copy drifts from `src/`.
 
 ### BUG-020: New tasks are not put on the roadmap automatically
 
 - **Severity:** serious · **Found:** 2026-09-27 (reported from Bob) · **Status:** fixed (v0.4.0)
-- **Where:** `rules/layout.md`, `.bob/rules/tricklord.md`, `hooks/roadmap_hook.py`
-- **What happens:** with a `LAYOUT.md` and a new task, Bob did not create or update a roadmap. The rule covered only features ("not a bug fix or a small tweak"), nothing fired when a task arrived (Bob's only reminder was a rule in its system prompt), and in live tests a model asked to create the roadmap wrote its own stripped-down version without the `<!-- tricklord -->` marker or progress markers.
+- **Where:** `rules/layout.md`, `.bob/rules/trustmebro.md`, `hooks/roadmap_hook.py`
+- **What happens:** with a `LAYOUT.md` and a new task, Bob did not create or update a roadmap. The rule covered only features ("not a bug fix or a small tweak"), nothing fired when a task arrived (Bob's only reminder was a rule in its system prompt), and in live tests a model asked to create the roadmap wrote its own stripped-down version without the `<!-- trustmebro -->` marker or progress markers.
 - **Fix (v0.4.0):** every new task that changes the project is recorded before the work (feature → `## Feature <n>` phase; fix or small change → item under `## Maintenance: fixes and small changes`; big work → phase with `[ ] Plan approved by the user` and no code until approved). A new `prompt` hook on `UserPromptSubmit` (Claude Code and Bob) reminds the AI with every prompt, and when a marked `LAYOUT.md` has no roadmap it creates `ROADMAP.md` itself from the template, so the format is always right; a repo's own unmarked `ROADMAP.md` is never touched. Verified live in Claude Code (`claude -p`, Sonnet 5): the hook created the roadmap, the task was recorded under Maintenance before `app.py` was edited, then ticked, and `LAYOUT.md` was updated. Verified in IBM Bob Shell 2.0.5 (`bob run`, task `22fdf4fa00395fcc3ecaf7472b82d4b9`, 35 s, cost 0.458): the hook created `ROADMAP.md` before Bob's first step; Bob's todo list started with "Add multiply task to ROADMAP.md", it added `## Feature 1: multiply function` before editing `app.py`, then updated `LAYOUT.md`, ticked both items with evidence, added a change-log line, ran the progress script (100%) and told the user in one line.
 
-### BUG-021: Bob loads the tricklord rules twice
+### BUG-021: Bob loads the TrustMeBro rules twice
 
 - **Severity:** minor · **Found:** 2026-09-27 · **Status:** open
-- **Where:** `.bob/settings.json` (`SessionStart`), `.bob/rules/tricklord.md`, `.bob/tricklord/rules/`
-- **What happens:** Bob always loads `.bob/rules/tricklord.md`, and the `SessionStart` hook prints the same layout and roadmap rules again (from `.bob/tricklord/rules/`), so every Bob session carries about 3,000 extra characters.
-- **Fix idea:** give the hook a `start --state-only` mode for Bob that prints only the progress headline, next actions and layout, and keep the rules in `.bob/rules/tricklord.md`.
+- **Where:** `.bob/settings.json` (`SessionStart`), `.bob/rules/trustmebro.md`, `.bob/trustmebro/rules/`
+- **What happens:** Bob always loads `.bob/rules/trustmebro.md`, and the `SessionStart` hook prints the same layout and roadmap rules again (from `.bob/trustmebro/rules/`), so every Bob session carries about 3,000 extra characters.
+- **Fix idea:** give the hook a `start --state-only` mode for Bob that prints only the progress headline, next actions and layout, and keep the rules in `.bob/rules/trustmebro.md`.
 
 ### BUG-022: The roadmap entry is sometimes written after the code
 
 - **Severity:** medium · **Found:** 2026-09-27 (benchmark) · **Status:** open
 - **Where:** `hooks/roadmap_hook.py` (`prompt` reminder), `rules/layout.md`
-- **What happens:** in the Claude Code benchmark (`benchmark/results.csv`), every tricklord run put the task on the roadmap, but in 2 of 6 runs (the `feature` task, repeat 2, and the `fix` task, repeat 1) Claude edited `app.py` first and added the ticked roadmap item afterwards. The reminder says "before doing the work", but it is only advice.
+- **What happens:** in the Claude Code benchmark (`benchmark/results.csv`), every TrustMeBro run put the task on the roadmap, but in 2 of 6 runs (the `feature` task, repeat 2, and the `fix` task, repeat 1) Claude edited `app.py` first and added the ticked roadmap item afterwards. The reminder says "before doing the work", but it is only advice.
 - **Fix idea:** enforce the order with a `PreToolUse` hook, which both Claude Code (exit code 2 or a deny decision) and Bob (exit code 2) can use to block a tool: block the first edit of a code file in a turn until `ROADMAP.md` has been edited in that turn, with a message saying why. Then rerun `python3 benchmark/bench.py run --agent claude --reps 2`.

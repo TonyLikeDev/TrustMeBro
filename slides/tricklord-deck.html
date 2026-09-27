@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TrustMeBro deck</title>
+<style>
+  @page { size: 1280px 720px; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #0d0d0d; }
+  body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .slide { width: 1280px; height: 720px; padding: 72px 88px; position: relative; overflow: hidden; background: #0d0d0d; page-break-after: always; break-after: page; display: flex; flex-direction: column; }
+  .slide:last-child { page-break-after: auto; break-after: auto; }
+  .kicker { font-size: 18px; color: #3987e5; font-weight: 600; margin-bottom: 18px; }
+  h1 { font-size: 84px; line-height: 1.02; letter-spacing: -0.035em; margin: 0 0 28px; }
+  h2 { font-size: 52px; line-height: 1.08; letter-spacing: -0.025em; margin: 0 0 32px; max-width: 1000px; }
+  p, li { font-size: 26px; line-height: 1.45; color: #c3c2b7; }
+  p { margin: 0 0 16px; max-width: 980px; }
+  b, strong { color: #fff; }
+  code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.85em; background: #1d1d1c; padding: 2px 8px; border-radius: 6px; color: #fff; }
+  pre { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 22px; line-height: 1.6; background: #161615; border: 1px solid #2c2c2a; border-radius: 12px; padding: 20px 24px; margin: 0; color: #fff; }
+  .foot { position: absolute; left: 88px; right: 88px; bottom: 36px; display: flex; justify-content: space-between; font-size: 16px; color: #898781; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .panel { border: 1px solid #2c2c2a; border-radius: 14px; padding: 26px 28px; background: #161615; }
+  .panel.us { border-color: #3987e5; background: #13202f; }
+  .panel h3 { margin: 0 0 12px; font-size: 24px; }
+  .panel p, .panel li { font-size: 22px; }
+  .figs { font-size: 22px; color: #c3c2b7; margin-top: 14px; font-variant-numeric: tabular-nums; }
+  .figs b { font-size: 30px; margin-right: 4px; }
+  ol.steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  ol.steps li { display: grid; grid-template-columns: 260px 1fr; gap: 24px; padding-top: 10px; border-top: 1px solid #2c2c2a; font-size: 22px; line-height: 1.4; }
+  ol.steps li b { font-size: 26px; }
+  table { border-collapse: collapse; width: 100%; font-size: 21px; font-variant-numeric: tabular-nums; }
+  th, td { padding: 9px 12px; text-align: right; color: #c3c2b7; border-bottom: 1px solid #2c2c2a; }
+  th:first-child, td:first-child, th:nth-child(2), td:nth-child(2) { text-align: left; }
+  th { color: #898781; font-size: 16px; font-weight: 600; }
+  tr.us td { color: #fff; font-weight: 700; background: #13202f; }
+  td.sc { color: #fff; font-weight: 600; }
+  .win { border-top: 3px solid #3fbf5f; padding-top: 18px; }
+  .cost { border-top: 3px solid #e0703f; padding-top: 18px; }
+  .big { font-size: 44px; font-weight: 800; color: #fff; letter-spacing: -0.02em; display: block; line-height: 1.1; }
+  ul.clean { list-style: none; padding: 0; margin: 0; display: grid; gap: 22px; }
+  .badge { font-size: 15px; font-weight: 700; border: 1px solid #43433f; border-radius: 999px; padding: 2px 10px; color: #9a9892; margin-left: 10px; vertical-align: 4px; }
+  .badge.ok { color: #3fbf5f; border-color: #3fbf5f; }
+  .agents li { font-size: 24px; }
+</style>
+</head>
+<body>
+
+<section class="slide" style="justify-content:center">
+  <div class="kicker">IBM Bob 2.0 hackathon · team Trust Me Bro</div>
+  <h1>TrustMeBro<br>Your agent keeps the roadmap.</h1>
+  <p>Plan-first projects for AI coding agents: map the code, put every new task on the roadmap before touching it, keep the records current, and let the next session start where the last one stopped.</p>
+  <div class="foot"><span>github.com/TonyLikeDev/tricklord</span><span>1</span></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">The problem</div>
+  <h2>Multi-session projects with an AI agent lose their thread.</h2>
+  <div class="grid2">
+    <div>
+      <p><b>Planning is manual.</b> Turning an idea into phases, tasks, "done" criteria and risks takes days, and the plan ends up in scattered notes.</p>
+      <p><b>Every session starts cold.</b> The developer re-explains where things stand, or the whole history is dumped into the context window.</p>
+    </div>
+    <div class="panel">
+      <h3>We lived it</h3>
+      <p>Our first IBM Bob planning session used <b>~160,000 tokens</b> without writing a line of code, <b>~80,000</b> of them from fetching the same page twice.</p>
+    </div>
+  </div>
+  <div class="foot"><span>TrustMeBro</span><span>2</span></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">The solution</div>
+  <h2>Three files the agent keeps current.</h2>
+  <ol class="steps">
+    <li><b>Map it</b><span><code>/layout-init</code> writes <code>LAYOUT.md</code>: folders, components, database, where each piece of logic lives.</span></li>
+    <li><b>Plan it</b><span><code>/roadmap-planner</code> turns an idea into <code>PLAN.md</code>, waits for approval, then creates <code>ROADMAP.md</code>.</span></li>
+    <li><b>Record first</b><span>Every new task goes on the roadmap before the code: feature, fix, or big work behind an approved plan.</span></li>
+    <li><b>Tick with evidence</b><span>Items are ticked with the file, test or result that proves them; the layout is updated too.</span></li>
+    <li><b>Resume cold</b><span>The next session starts from the progress headline and next actions, not from rereading the code.</span></li>
+  </ol>
+  <div class="foot"><span>TrustMeBro</span><span>3</span></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">In IBM Bob</div>
+  <h2>Copy <code>.bob/</code> into a project. Bob does the rest.</h2>
+  <div class="grid2">
+    <div>
+      <ul class="clean">
+        <li><b>Rules</b> in <code>.bob/rules/trustmebro.md</code>, always loaded.</li>
+        <li><b>Hooks:</b> <code>SessionStart</code> loads progress and next actions; <code>UserPromptSubmit</code> creates <code>ROADMAP.md</code> and reminds Bob: record first.</li>
+        <li><b>Skills:</b> layout-init, roadmap-planner, roadmap-sync.</li>
+      </ul>
+    </div>
+    <div class="panel us">
+      <h3>Live Bob Shell run: "Add multiply(a, b)"</h3>
+      <p>Todo list step 1: add the task to <code>ROADMAP.md</code>. Roadmap entry <b>before</b> the code, then <code>LAYOUT.md</code> updated, item ticked with evidence, progress refreshed to 100%.</p>
+      <div class="figs"><b>35 s</b> · <b>12</b> tool calls · all checks passed</div>
+    </div>
+  </div>
+  <div class="foot"><span>TrustMeBro</span><span>4</span></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Benchmark</div>
+  <h2>Same prompt on a half-finished project.</h2>
+  <p>"Continue the project: do the next open task." New session, same model, same code: shoplite, 35 files, 16 tests, 3 features done, 2 open, 1 known bug.</p>
+  <div class="grid2" style="margin-top:16px">
+    <div class="panel">
+      <h3>Base agent</h3>
+      <p>Explores the code to work out what is done and next, writes the change, records nothing.</p>
+      <div class="figs"><b>104 s</b> · $0.30 · 593k tokens · 27 tool calls</div>
+    </div>
+    <div class="panel us">
+      <h3>With TrustMeBro</h3>
+      <p>Reads the next action from the roadmap, does it, ticks it in <code>ROADMAP.md</code>.</p>
+      <div class="figs"><b>51 s</b> · $0.22 · 468k tokens · 13 tool calls</div>
+    </div>
+  </div>
+  <div class="foot"><span>Claude Code, Sonnet 5, medians of 3 runs</span><span>5</span></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Benchmark results</div>
+  <h2 style="margin-bottom:20px">Three setups, four scenarios.</h2>
+  <table>
+    <thead><tr><th>Scenario</th><th>Setup</th><th>Correct</th><th>Time</th><th>Tokens</th><th>Cost</th><th>Roadmap current</th></tr></thead>
+    <tbody>
+      <tr><td class="sc">Resume the project</td><td>Base</td><td>3/3</td><td>104 s</td><td>593k</td><td>$0.303</td><td>n/a</td></tr>
+      <tr class="us"><td></td><td>TrustMeBro</td><td>3/3</td><td>51 s</td><td>468k</td><td>$0.215</td><td>3/3</td></tr>
+      <tr><td class="sc">What's done, what's left?</td><td>Base</td><td>2 of 3</td><td>23 s</td><td>116k</td><td>$0.083</td><td>n/a</td></tr>
+      <tr class="us"><td></td><td>TrustMeBro</td><td>3 of 3</td><td>11 s</td><td>63k</td><td>$0.076</td><td>n/a</td></tr>
+      <tr><td class="sc">Add a cross-module feature</td><td>Base</td><td>3/3</td><td>58 s</td><td>368k</td><td>$0.201</td><td>n/a</td></tr>
+      <tr><td></td><td>Docs only</td><td>3/3</td><td>57 s</td><td>406k</td><td>$0.210</td><td>0/3</td></tr>
+      <tr class="us"><td></td><td>TrustMeBro</td><td>3/3</td><td>69 s</td><td>485k</td><td>$0.266</td><td>3/3</td></tr>
+      <tr><td class="sc">Two tasks, two sessions</td><td>Base</td><td>2/2</td><td>114 s</td><td>966k</td><td>$0.407</td><td>n/a</td></tr>
+      <tr class="us"><td></td><td>TrustMeBro</td><td>2/2</td><td>149 s</td><td>1,020k</td><td>$0.520</td><td>2/2</td></tr>
+    </tbody>
+  </table>
+  <div class="foot"><span>45 sessions, $7.81, 2026-09-27 · full table and chart in the repo README</span><span>6</span></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">What it shows</div>
+  <h2>Faster to pick up. Honest about the cost.</h2>
+  <div class="grid2">
+    <div class="win">
+      <ul class="clean">
+        <li><span class="big">2× faster</span>resuming a project, 29% cheaper</li>
+        <li><span class="big">46% fewer tokens</span>answering "what's left?", and it found the bug only the roadmap knew</li>
+        <li><span class="big">100%</span>of change runs kept the roadmap current; docs without the plugin: 0 of 5</li>
+      </ul>
+    </div>
+    <div class="cost">
+      <ul class="clean">
+        <li><span class="big">+28–32%</span>cost on pure implementation tasks, spent on keeping the roadmap and layout up to date</li>
+        <li><span class="big">Same quality</span>every setup did every change task correctly</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><span>TrustMeBro</span><span>7</span></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Works with</div>
+  <h2>One repo, six agents.</h2>
+  <div class="grid2 agents">
+    <ul class="clean">
+      <li><b>IBM Bob</b><span class="badge ok">tested</span><br>copy <code>.bob/</code> into the project</li>
+      <li><b>Claude Code</b><span class="badge ok">tested</span><br><code>/plugin marketplace add TonyLikeDev/tricklord</code></li>
+      <li><b>GitHub Copilot CLI</b><span class="badge ok">tested</span><br><code>copilot plugin install trustmebro@trustmebro</code></li>
+    </ul>
+    <ul class="clean">
+      <li><b>Antigravity CLI</b><span class="badge ok">validated</span><br><code>agy plugin install ./tricklord/src</code></li>
+      <li><b>Codex</b><span class="badge">untested</span><br><code>codex plugin add trustmebro@trustmebro</code></li>
+      <li><b>Gemini CLI</b><span class="badge">untested</span><br><code>gemini extensions install ./tricklord/src</code></li>
+    </ul>
+  </div>
+  <div class="foot"><span>skills everywhere; automatic hooks in Claude Code and Bob</span><span>8</span></div>
+</section>
+
+<section class="slide" style="justify-content:center">
+  <div class="kicker">Thank you</div>
+  <h1>Your agent keeps the roadmap.</h1>
+  <p><b>github.com/TonyLikeDev/tricklord</b></p>
+  <p>Website in <code>web/</code> · benchmark in <code>benchmark/</code> · Bob test in <code>trustmebro-bob-test/</code></p>
+  <div class="foot"><span>team Trust Me Bro · IBM Bob 2.0 hackathon</span><span>9</span></div>
+</section>
+
+</body>
+</html>

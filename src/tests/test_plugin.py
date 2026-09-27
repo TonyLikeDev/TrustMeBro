@@ -12,8 +12,8 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 from roadmap_progress import phases, render  # noqa: E402
 
-BOB = ROOT.parent / ".bob" / "tricklord"  # IBM Bob copy of the scripts and templates
-MARK = "<!-- tricklord -->\n"
+BOB = ROOT.parent / ".bob" / "trustmebro"  # IBM Bob copy of the scripts and templates
+MARK = "<!-- trustmebro -->\n"
 SAMPLE = MARK + """# Roadmap
 ## Progress
 <!-- progress:start -->
@@ -40,7 +40,7 @@ def hook(project, mode, payload=None):
 
 
 def bob_hook(project, mode, payload=None):
-    """Run the .bob/tricklord copy the way IBM Bob does: from the workspace root, no CLAUDE_PROJECT_DIR."""
+    """Run the .bob/trustmebro copy the way IBM Bob does: from the workspace root, no CLAUDE_PROJECT_DIR."""
     env = {k: v for k, v in os.environ.items() if k != "CLAUDE_PROJECT_DIR"}
     cmd = [sys.executable, str(BOB / "hooks" / "roadmap_hook.py"), mode]
     return subprocess.run(cmd, input=json.dumps(payload or {}), capture_output=True, text=True, env=env, cwd=project).stdout
@@ -122,7 +122,7 @@ def test_stop():
 def test_prompt():
     with tempfile.TemporaryDirectory() as d:
         p = Path(d).resolve()
-        assert hook(p, "prompt") == ""  # no tricklord files: silent
+        assert hook(p, "prompt") == ""  # no TrustMeBro files: silent
         (p / "LAYOUT.md").write_text("# Architecture\n")
         assert hook(p, "prompt") == ""  # a repo's own LAYOUT.md is not ours
         (p / "LAYOUT.md").write_text(MARK + "# Project layout\n")
@@ -144,7 +144,7 @@ def test_prompt():
 
 
 def test_bob_copy():
-    """The .bob/tricklord files are copies of src/ so a copied .bob/ folder works in any project; they must not drift."""
+    """The .bob/trustmebro files are copies of src/ so a copied .bob/ folder works in any project; they must not drift."""
     if not BOB.is_dir():
         return
     for src_file, bob_file in [("hooks/roadmap_hook.py", "hooks/roadmap_hook.py"),
@@ -153,7 +153,7 @@ def test_bob_copy():
                                ("templates/PLAN.md", "templates/PLAN.md"),
                                ("templates/LAYOUT.md", "templates/LAYOUT.md"),
                                ("rules/layout.md", "rules/layout.md")]:  # rules/roadmap.md is reworded for Bob on purpose
-        assert (ROOT / src_file).read_bytes() == (BOB / bob_file).read_bytes(), f"copy src/{src_file} to .bob/tricklord/{bob_file}"
+        assert (ROOT / src_file).read_bytes() == (BOB / bob_file).read_bytes(), f"copy src/{src_file} to .bob/trustmebro/{bob_file}"
 
 
 if __name__ == "__main__":

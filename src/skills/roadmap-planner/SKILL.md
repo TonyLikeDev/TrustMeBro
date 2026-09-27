@@ -26,7 +26,7 @@ Plugin files, relative to this skill's base directory: templates at `../../templ
    - Exit criteria are observable ("tests pass", "table filled"), not feelings.
    - Front-load risk: what is most likely to fail goes early, with a row in Risks and fallbacks.
    - When there is a report or paper, map every section to the phases that produce it, so it is assembled from phase outputs.
-4. **Stop.** Summarize in a few lines (phases, deliverables, biggest risk, open questions) and ask the user to review or edit `PLAN.md`. Do not create `ROADMAP.md` and do not start building. In later sessions the tricklord hook treats a plan without a roadmap as an unapproved draft.
+4. **Stop.** Summarize in a few lines (phases, deliverables, biggest risk, open questions) and ask the user to review or edit `PLAN.md`. Do not create `ROADMAP.md` and do not start building. In later sessions the TrustMeBro hook treats a plan without a roadmap as an unapproved draft.
 
 Iterate on the plan as long as the user wants.
 

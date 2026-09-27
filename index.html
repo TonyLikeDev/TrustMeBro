@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TrustMeBro</title>
+<meta name="description" content="Plan-first projects for AI coding agents: your agent maps the code, puts every task on the roadmap first, and keeps the records current.">
+<style>
+  :root {
+    --bg: #0d0d0d; --surface: #161615; --raise: #1d1d1c; --line: #2c2c2a; --line-strong: #43433f;
+    --text: #ffffff; --text-2: #c3c2b7; --muted: #9a9892;
+    --accent: #3987e5; --accent-wash: rgba(57, 135, 229, 0.10); --good: #3fbf5f; --cost: #e0703f;
+    color-scheme: dark;
+  }
+  :root[data-theme="light"] {
+    --bg: #f9f9f7; --surface: #fcfcfb; --raise: #f0efec; --line: #e1e0d9; --line-strong: #c3c2b7;
+    --text: #0b0b0b; --text-2: #52514e; --muted: #6a6964;
+    --accent: #2a78d6; --accent-wash: rgba(42, 120, 214, 0.08); --good: #006300; --cost: #a8421a;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #f9f9f7; --surface: #fcfcfb; --raise: #f0efec; --line: #e1e0d9; --line-strong: #c3c2b7;
+      --text: #0b0b0b; --text-2: #52514e; --muted: #6a6964;
+      --accent: #2a78d6; --accent-wash: rgba(42, 120, 214, 0.08); --good: #006300; --cost: #a8421a;
+      color-scheme: light;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+  main { max-width: 800px; margin: 0 auto; padding: 28px 20px 72px; }
+  h1 { font-size: clamp(40px, 7vw, 64px); line-height: 1.02; letter-spacing: -0.035em; margin: 0 0 20px; text-wrap: balance; }
+  h2 { font-size: 30px; line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 12px; text-wrap: balance; }
+  h3 { font-size: 16px; margin: 28px 0 8px; }
+  p { color: var(--text-2); margin: 0 0 14px; max-width: 64ch; }
+  a { color: var(--accent); text-underline-offset: 3px; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  section { padding: 72px 0 8px; }
+  code, pre, .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 14px; }
+  :not(pre) > code { background: var(--raise); padding: 1px 6px; border-radius: 5px; font-size: 0.86em; overflow-wrap: anywhere; }
+  pre { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin: 8px 0 14px; overflow-x: auto; color: var(--text); line-height: 1.7; }
+  .copy { position: absolute; top: 10px; right: 10px; font: 12px system-ui, sans-serif; color: var(--text-2); background: var(--raise); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; transition: background .15s, color .15s; }
+  .copy:hover { color: var(--text); border-color: var(--line-strong); }
+
+  .top { display: flex; justify-content: space-between; align-items: center; font-size: 14px; padding-bottom: 56px; }
+  .top nav { display: flex; align-items: center; gap: 20px; }
+  .top a { color: var(--text-2); text-decoration: none; }
+  .top a:hover { color: var(--text); }
+  .brand { font-weight: 700; letter-spacing: -0.01em; color: var(--text); font-size: 16px; }
+  .toggle { background: none; border: 1px solid var(--line); color: var(--text-2); border-radius: 6px; width: 30px; height: 28px; cursor: pointer; }
+  .toggle:hover { color: var(--text); border-color: var(--line-strong); }
+
+  .lead { font-size: 20px; line-height: 1.55; color: var(--text-2); max-width: 36em; margin-bottom: 28px; }
+  .lead strong { color: var(--text); font-weight: 600; }
+  .install-label { font-size: 13px; color: var(--muted); margin: 0 0 6px; }
+  .agents-line { font-size: 14px; color: var(--muted); margin-top: 14px; }
+  .agents-line span { color: var(--text-2); }
+
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+  .side { min-width: 0; border: 1px solid var(--line); border-radius: 12px; padding: 18px; background: var(--surface); }
+  .side.us { border-color: var(--accent); background: linear-gradient(var(--accent-wash), var(--accent-wash)), var(--surface); }
+  .side-name { font-weight: 600; margin: 0 0 4px; }
+  .side p { font-size: 15px; margin-bottom: 12px; }
+  .side pre { margin: 0 0 12px; font-size: 12.5px; padding: 12px 14px; background: var(--bg); white-space: pre-wrap; overflow-wrap: anywhere; }
+  .side .empty { border: 1px dashed var(--line-strong); border-radius: 8px; padding: 18px 14px; font-size: 14px; color: var(--muted); margin-bottom: 12px; }
+  .figures { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 14px; color: var(--text-2); font-variant-numeric: tabular-nums; }
+  .figures b { color: var(--text); font-weight: 600; }
+  .fine { font-size: 13px; color: var(--muted); margin-top: 12px; }
+
+  ol.loop { list-style: none; padding: 0; margin: 24px 0 0; display: grid; gap: 18px; }
+  ol.loop li { display: grid; grid-template-columns: 150px 1fr; gap: 16px; color: var(--text-2); padding-top: 18px; border-top: 1px solid var(--line); }
+  ol.loop b { color: var(--text); font-weight: 600; }
+
+  .verdict { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; margin: 28px 0 8px; }
+  .verdict > div { min-width: 0; border-top: 2px solid var(--good); padding-top: 14px; }
+  .verdict > div.costs { border-top-color: var(--cost); }
+  .verdict h3 { margin: 0 0 10px; font-size: 14px; color: var(--muted); font-weight: 600; }
+  .verdict ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+  .verdict li { color: var(--text-2); font-size: 15px; font-variant-numeric: tabular-nums; }
+  .verdict li b { color: var(--text); font-size: 20px; font-weight: 700; letter-spacing: -0.01em; margin-right: 6px; }
+
+  figure { margin: 32px 0 8px; }
+  figure img { width: 100%; height: auto; border-radius: 10px; display: block; border: 1px solid var(--line); }
+  .table-wrap { overflow-x: auto; margin: 24px 0 8px; border: 1px solid var(--line); border-radius: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; min-width: 620px; }
+  th, td { text-align: right; padding: 8px 12px; color: var(--text-2); white-space: nowrap; }
+  th:first-child, td:first-child, th:nth-child(2), td:nth-child(2) { text-align: left; }
+  thead th { color: var(--muted); font-weight: 600; font-size: 12px; background: var(--surface); border-bottom: 1px solid var(--line); }
+  tbody tr.first td { border-top: 1px solid var(--line); }
+  tbody tr:first-child td { border-top: 0; }
+  td.scenario { color: var(--text); font-weight: 600; white-space: normal; }
+  tr.us td { color: var(--text); font-weight: 600; background: var(--accent-wash); }
+  tr.us td.scenario { background: none; }
+  .note { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; color: var(--text-2); margin: 16px 0; font-size: 15px; }
+  .note b { color: var(--text); }
+
+  .install { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 24px; }
+  .install > div { min-width: 0; }
+  .install h3 { display: flex; align-items: center; gap: 8px; }
+  .badge { font-size: 11px; font-weight: 600; border: 1px solid var(--line-strong); border-radius: 999px; padding: 1px 8px; color: var(--muted); }
+  .badge.ok { color: var(--good); border-color: currentColor; }
+  .install p { font-size: 15px; }
+
+  dl.cmds { display: grid; grid-template-columns: max-content 1fr; gap: 12px 24px; margin: 20px 0 0; }
+  dl.cmds dt { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 14px; color: var(--text); padding-top: 2px; }
+  dl.cmds dd { margin: 0; color: var(--text-2); min-width: 0; }
+
+  footer { margin-top: 72px; border-top: 1px solid var(--line); padding-top: 24px; font-size: 14px; color: var(--muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer a { color: var(--text-2); }
+
+  @media (max-width: 680px) {
+    body { font-size: 16px; }
+    section { padding-top: 56px; }
+    .compare, .verdict, .install { grid-template-columns: 1fr; }
+    ol.loop li { grid-template-columns: 1fr; gap: 4px; }
+    dl.cmds { grid-template-columns: 1fr; gap: 2px; }
+    dl.cmds dd { margin-bottom: 12px; }
+    .top nav a.hide-sm { display: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="top">
+    <span class="brand">TrustMeBro</span>
+    <nav aria-label="Page">
+      <a href="#benchmark">Benchmark</a>
+      <a href="#install">Install</a>
+      <a class="hide-sm" href="https://github.com/TonyLikeDev/tricklord">GitHub</a>
+      <button class="toggle" id="theme" type="button" aria-label="Switch light or dark theme">◐</button>
+    </nav>
+  </header>
+
+  <div>
+    <h1>Your agent keeps the roadmap.</h1>
+    <p class="lead">TrustMeBro maps your code, <strong>puts every new task on the roadmap before touching it</strong>, and keeps the records current as work lands. The next session starts from where the last one stopped.</p>
+    <p class="install-label">Install in Claude Code</p>
+    <pre><code>/plugin marketplace add TonyLikeDev/tricklord
+/plugin install trustmebro@trustmebro</code></pre>
+    <p class="agents-line">Also for <span>IBM Bob</span>, <span>GitHub Copilot CLI</span>, <span>Antigravity</span> and <span>Codex</span> · <a href="#install">all installs</a> · built for the IBM Bob 2.0 hackathon</p>
+  </div>
+
+  <section>
+    <h2>Same prompt, one keeps the record</h2>
+    <p>A new session on a half-finished project, same model and code. The prompt: <code>Continue the project: do the next open task.</code></p>
+    <div class="compare">
+      <div class="side">
+        <p class="side-name">Base agent</p>
+        <p>Explores the code to work out what's done and what's next, then writes the change.</p>
+        <div class="empty">No record of the work. The next session starts from scratch again.</div>
+        <div class="figures"><span><b>104 s</b></span><span><b>593k</b> tokens</span><span><b>$0.30</b></span><span><b>27</b> tool calls</span></div>
+      </div>
+      <div class="side us">
+        <p class="side-name">With TrustMeBro</p>
+        <p>Reads the next action from the roadmap, does it, and records it:</p>
+        <pre><code>## Feature 4: Discount codes
+- [x] `discount_codes` table in schema.sql,
+      seeded with SAVE10</code></pre>
+        <div class="figures"><span><b>51 s</b></span><span><b>468k</b> tokens</span><span><b>$0.22</b></span><span><b>13</b> tool calls</span></div>
+      </div>
+    </div>
+    <p class="fine">Medians of 3 runs each, Claude Code with Sonnet 5, on the benchmark project below.</p>
+  </section>
+
+  <section>
+    <h2>How it works</h2>
+    <ol class="loop">
+      <li><b>Map it</b><span><code>/layout-init</code> writes <code>LAYOUT.md</code>: folders, components, database, and where every piece of logic lives.</span></li>
+      <li><b>Plan it</b><span><code>/roadmap-planner</code> turns an idea or a proposal into <code>PLAN.md</code> and stops for your approval, then creates <code>ROADMAP.md</code>.</span></li>
+      <li><b>Record first</b><span>Every new task goes on the roadmap before the code: a feature becomes a phase, a fix a maintenance item, and big work waits for an approved plan.</span></li>
+      <li><b>Tick with evidence</b><span>Finished items are ticked with the file, test or result that proves them, and the layout is updated in the same change.</span></li>
+      <li><b>Resume cold</b><span>The next session starts from the progress headline and the next actions, not from rereading the code.</span></li>
+    </ol>
+  </section>
+
+  <section id="benchmark">
+    <h2>Benchmark</h2>
+    <p>A half-finished shop backend (35 files, 16 tests: 3 features done, 2 open, 1 known bug), a fresh session per task, and three setups with identical code: the base agent, the agent with <code>LAYOUT.md</code> and <code>ROADMAP.md</code> but no plugin, and TrustMeBro.</p>
+
+    <div class="verdict">
+      <div>
+        <h3>Where it wins</h3>
+        <ul>
+          <li><b>2× faster</b> resuming the project: 51 s vs 104 s, and 29% cheaper</li>
+          <li><b>46% fewer tokens</b> answering "what's done, what's left?", and it named the bug the code doesn't show</li>
+          <li><b>Every</b> change run left the roadmap current; the same docs without the plugin, 0 of 5</li>
+        </ul>
+      </div>
+      <div class="costs">
+        <h3>What it costs</h3>
+        <ul>
+          <li><b>+28–32%</b> on pure implementation tasks, for keeping the roadmap and layout up to date</li>
+        </ul>
+      </div>
+    </div>
+
+    <figure>
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="project-chart-dark.svg">
+        <img id="chart" src="project-chart-light.svg" width="720" height="1044" alt="Median time, tokens and cost per scenario for TrustMeBro, docs only and the base agent. Resume: 51 s, 69 s, 104 s. Status: 11 s, 15 s, 23 s. Add a feature: 69 s, 57 s, 58 s. Two tasks in two sessions: 149 s, 125 s, 114 s.">
+      </picture>
+    </figure>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Scenario</th><th>Setup</th><th>Correct</th><th>Time</th><th>Tokens</th><th>Cost</th><th>Roadmap current</th></tr></thead>
+        <tbody>
+          <tr class="first"><td class="scenario" rowspan="3">Resume the project</td><td>Base</td><td>3/3</td><td>104 s</td><td>593k</td><td>$0.303</td><td>n/a</td></tr>
+          <tr><td>Docs only</td><td>3/3</td><td>69 s</td><td>518k</td><td>$0.239</td><td>3/3</td></tr>
+          <tr class="us"><td>TrustMeBro</td><td>3/3</td><td>51 s</td><td>468k</td><td>$0.215</td><td>3/3</td></tr>
+          <tr class="first"><td class="scenario" rowspan="3">What's done, what's left?</td><td>Base</td><td>2 of 3 items</td><td>23 s</td><td>116k</td><td>$0.083</td><td>n/a</td></tr>
+          <tr><td>Docs only</td><td>3 of 3</td><td>15 s</td><td>87k</td><td>$0.079</td><td>n/a</td></tr>
+          <tr class="us"><td>TrustMeBro</td><td>3 of 3</td><td>11 s</td><td>63k</td><td>$0.076</td><td>n/a</td></tr>
+          <tr class="first"><td class="scenario" rowspan="3">Add a cross-module feature</td><td>Base</td><td>3/3</td><td>58 s</td><td>368k</td><td>$0.201</td><td>n/a</td></tr>
+          <tr><td>Docs only</td><td>3/3</td><td>57 s</td><td>406k</td><td>$0.210</td><td>0/3</td></tr>
+          <tr class="us"><td>TrustMeBro</td><td>3/3</td><td>69 s</td><td>485k</td><td>$0.266</td><td>3/3</td></tr>
+          <tr class="first"><td class="scenario" rowspan="3">Two tasks, two sessions</td><td>Base</td><td>2/2</td><td>114 s</td><td>966k</td><td>$0.407</td><td>n/a</td></tr>
+          <tr><td>Docs only</td><td>2/2</td><td>125 s</td><td>1,172k</td><td>$0.464</td><td>0/2</td></tr>
+          <tr class="us"><td>TrustMeBro</td><td>2/2</td><td>149 s</td><td>1,020k</td><td>$0.520</td><td>2/2</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fine">Claude Code 2.1.283, Sonnet 5, 2026-09-27. 3 runs per cell (2 for the two-session chain), 45 sessions, $7.81. Tokens include cached input. "Two tasks, two sessions": discount codes, then the shipping bug, each in a new session with no memory of the first. Reproduce with <code>python3 benchmark/project_bench.py run</code>.</p>
+  </section>
+
+  <section id="install">
+    <h2>Install</h2>
+    <p>Skills work in every agent. The automatic parts (session-start rules, the new-task reminder that creates <code>ROADMAP.md</code>) run in Claude Code and Bob.</p>
+    <div class="install">
+      <div>
+        <h3>Claude Code <span class="badge ok">tested</span></h3>
+        <pre><code>/plugin marketplace add TonyLikeDev/tricklord
+/plugin install trustmebro@trustmebro</code></pre>
+      </div>
+      <div>
+        <h3>IBM Bob <span class="badge ok">tested</span></h3>
+        <p>Copy the repo's <code>.bob/</code> folder into your project and open it in Bob. Rules, skills and both hooks are inside.</p>
+      </div>
+      <div>
+        <h3>GitHub Copilot CLI <span class="badge ok">tested</span></h3>
+        <pre><code>copilot plugin marketplace add TonyLikeDev/tricklord
+copilot plugin install trustmebro@trustmebro</code></pre>
+      </div>
+      <div>
+        <h3>Antigravity CLI <span class="badge ok">validated</span></h3>
+        <pre><code>git clone https://github.com/TonyLikeDev/tricklord.git
+agy plugin install ./tricklord/src</code></pre>
+      </div>
+      <div>
+        <h3>Codex <span class="badge">untested</span></h3>
+        <pre><code>codex plugin marketplace add TonyLikeDev/tricklord
+codex plugin add trustmebro@trustmebro</code></pre>
+      </div>
+      <div>
+        <h3>Gemini CLI <span class="badge">untested</span></h3>
+        <pre><code>gemini extensions install ./tricklord/src</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Commands</h2>
+    <dl class="cmds">
+      <dt>/layout-init</dt><dd>Map an existing codebase into <code>LAYOUT.md</code>.</dd>
+      <dt>/roadmap-planner</dt><dd>Turn an idea or documents into <code>PLAN.md</code>; after your approval, <code>ROADMAP.md</code> and the first action.</dd>
+      <dt>/roadmap-sync</dt><dd>Check the roadmap against the code and git history, and fix the drift.</dd>
+      <dt>/dedup-merge</dt><dd>Merge copy-pasted code into shared implementations, with before/after line counts.</dd>
+      <dt>/orchestrator</dt><dd>Look at the project's state and say which skill to run next.</dd>
+    </dl>
+  </section>
+
+  <footer>
+    <span>TrustMeBro · team Trust Me Bro · IBM Bob 2.0 hackathon</span>
+    <a href="https://github.com/TonyLikeDev/tricklord">github.com/TonyLikeDev/tricklord</a>
+  </footer>
+</main>
+<script>
+  // copy buttons on command blocks (not on the example roadmap lines)
+  document.querySelectorAll("pre").forEach(pre => {
+    if (pre.closest(".side")) return;
+    const text = pre.innerText.trim();
+    const b = document.createElement("button");
+    b.className = "copy"; b.type = "button"; b.textContent = "Copy";
+    b.onclick = () => navigator.clipboard.writeText(text).then(
+      () => { b.textContent = "Copied"; setTimeout(() => b.textContent = "Copy", 1400); },
+      () => { b.textContent = "Select and copy"; });
+    pre.appendChild(b);
+  });
+  // theme toggle; the chart image follows the page theme
+  const root = document.documentElement, chart = document.getElementById("chart"), source = chart.previousElementSibling;
+  const systemDark = () => matchMedia("(prefers-color-scheme: dark)").matches;
+  const apply = t => {
+    if (t) root.dataset.theme = t;
+    const dark = t ? t === "dark" : systemDark();
+    source.media = dark ? "all" : "not all";
+    chart.src = dark ? "project-chart-dark.svg" : "project-chart-light.svg";
+  };
+  let saved = null;
+  try { saved = localStorage.getItem("theme"); } catch (e) {}
+  apply(saved);
+  document.getElementById("theme").onclick = () => {
+    const next = (root.dataset.theme || (systemDark() ? "dark" : "light")) === "dark" ? "light" : "dark";
+    try { localStorage.setItem("theme", next); } catch (e) {}
+    apply(next);
+  };
+</script>
+</body>
+</html>

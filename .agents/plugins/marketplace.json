@@ -1,0 +1,12 @@
+{
+  "name": "trustmebro",
+  "interface": { "displayName": "TrustMeBro" },
+  "plugins": [
+    {
+      "name": "trustmebro",
+      "source": { "source": "url", "url": "https://github.com/TonyLikeDev/tricklord.git", "ref": "main" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+      "category": "Productivity"
+    }
+  ]
+}

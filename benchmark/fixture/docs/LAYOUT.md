@@ -1,4 +1,4 @@
-<!-- tricklord -->
+<!-- trustmebro -->
 # Project layout
 
 Map of the code: where things are, what they do, how they connect. **Rule: when a change adds, moves or removes a folder, component, table or piece of logic, update this file in the same commit.** One line per entry; point to files, don't paste code.

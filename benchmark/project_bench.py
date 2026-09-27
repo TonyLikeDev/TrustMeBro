@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Project benchmark: working on a half-finished project, with and without tricklord.
+"""Project benchmark: working on a half-finished project, with and without TrustMeBro.
 
 The project is benchmark/fixture/shoplite (35 files, 16 passing tests): three features done, two open (discount
 codes, low-stock alerts) and one known bug (orders over $50 still pay shipping). Three setups get identical code:
 
   base       the code and its README (which lists the two planned features, not the bug)
   docs       + LAYOUT.md and ROADMAP.md from benchmark/fixture/docs, no plugin
-  tricklord  + the same two files and the tricklord plugin
+  TrustMeBro  + the same two files and the TrustMeBro plugin
 
 Every session is a fresh `claude -p` with project settings only (--setting-sources project), so the user's own
-plugins stay out; tricklord comes in through --plugin-dir. Each run is scored by tests and checks on the files it
+plugins stay out; TrustMeBro comes in through --plugin-dir. Each run is scored by tests and checks on the files it
 leaves behind, and timed from the stream: total, and until its first file edit ("orientation").
 
   python3 benchmark/project_bench.py run [--reps 3] [--model sonnet] [--workers 6]
@@ -37,7 +37,7 @@ REPO = HERE.parent
 FIXTURE = HERE / "fixture"
 RESULTS = HERE / "project_results.csv"
 LOGS = HERE / "logs"
-SETUPS = ["base", "docs", "tricklord"]
+SETUPS = ["base", "docs", "trustmebro"]
 FIELDS = ["scenario", "setup", "rep", "success", "roadmap_updated", "seconds", "orient_seconds", "tokens",
           "orient_tokens", "output_tokens", "cost", "tool_calls", "orient_tool_calls", "model", "date"]
 TOKEN_KEYS = ("input_tokens", "cache_creation_input_tokens", "cache_read_input_tokens", "output_tokens")
@@ -105,7 +105,7 @@ def make_project(setup):
 def session(d, setup, prompt, model, log):
     cmd = ["claude", "-p", prompt, "--model", model, "--setting-sources", "project", "--permission-mode",
            "acceptEdits", "--allowedTools", "Bash", "--output-format", "stream-json", "--verbose"]
-    if setup == "tricklord":
+    if setup == "trustmebro":
         cmd += ["--plugin-dir", str(REPO / "src")]
     t0 = time.monotonic()
     proc = subprocess.Popen(cmd, cwd=d, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
@@ -223,7 +223,7 @@ def summary():
     return out
 
 
-SETUP_LABELS = {"tricklord": ("With tricklord", "s1"), "docs": ("Docs only, no plugin", "s3"),
+SETUP_LABELS = {"trustmebro": ("With TrustMeBro", "s1"), "docs": ("Docs only, no plugin", "s3"),
                 "base": ("Base agent", "s2")}
 SCENARIO_LABELS = {"resume": "Resume: do the next task", "locate": "Add a cross-module feature",
                    "status": "What's done and what's left?", "chain": "Two tasks, two sessions"}
@@ -232,13 +232,13 @@ THEMES = {t: {**bench.THEMES[t], "s3": s3} for t, s3 in (("light", "#1baf7a"), (
 
 def chart(theme):
     c, stats = THEMES[theme], summary()
-    order = ["tricklord", "docs", "base"]
+    order = ["trustmebro", "docs", "base"]
     W, LX, X0, XW, BAR, GAP, PAD = 720, 214, 226, 420, 13, 3, 20
     ROW = 3 * BAR + 2 * GAP + PAD
     panels = [("seconds", "Median time per run (seconds)", lambda v: f"{v:.0f} s"),
               ("tokens", "Median tokens per run (thousands, incl. cached)", lambda v: f"{v / 1000:.0f}k"),
               ("cost", "Median cost per run (US dollars)", lambda v: f"${v:.2f}")]
-    out = [bench.svg_text(24, 34, "tricklord vs the base agent on a half-finished project", 17, c["primary"], 600),
+    out = [bench.svg_text(24, 34, "TrustMeBro vs the base agent on a half-finished project", 17, c["primary"], 600),
            bench.svg_text(24, 56, "shoplite: 35 files, 3 features done, 2 open, 1 known bug. Claude Code, Sonnet 5, "
                                   "fresh session per task.", 13, c["secondary"])]
     lx = 24
@@ -278,7 +278,7 @@ def chart(theme):
     H = y
     body = "\n  ".join(out)
     return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" {bench.FONT} '
-            f'role="img" aria-label="Project benchmark: tricklord, docs only and base agent">\n'
+            f'role="img" aria-label="Project benchmark: TrustMeBro, docs only and base agent">\n'
             f'  <rect width="{W}" height="{H}" rx="8" fill="{c["surface"]}"/>\n  {body}\n</svg>\n')
 
 
