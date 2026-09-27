@@ -16,10 +16,12 @@
 
 ## What happens automatically
 
-- **Session start, `LAYOUT.md` present**: Claude gets the layout rules from `rules/layout.md` and the layout itself (or a pointer to it if it's over 6,000 characters).
-- **Session start, `ROADMAP.md` present** (project root, `docs/` or `research_docs/`): Claude gets the roadmap rules from `rules/roadmap.md`, the progress block and the next actions, and reads the roadmap before the code.
+Only files whose first line is `<!-- tricklord -->` count (the templates add it), so a repo's own `PLAN.md` or `ROADMAP.md` is left alone.
+
+- **Session start, `LAYOUT.md` present**: Claude gets the layout rules from `rules/layout.md`, and the layout itself if everything fits in about 8,000 characters (otherwise a pointer to it).
+- **Session start, `ROADMAP.md` present** (project root, `docs/` or `research_docs/`): Claude gets the roadmap rules from `rules/roadmap.md`, the progress headline and the next actions, and reads the roadmap before the code.
 - **Session start, plan but no roadmap**: Claude is told the plan is an unapproved draft and not to start building.
-- **End of a reply that changed code but not the roadmap**, or added / removed / renamed files but not the layout: Claude is asked once to update them.
+- **End of a reply in which Claude edited files but not the roadmap**, or created new files but not the layout: Claude is asked once to update them. Replies with no edits stay quiet.
 
 Edit `rules/` to change how Claude maintains the layout and roadmap, and `templates/` to change the document format.
 
@@ -37,8 +39,8 @@ src/
 │   ├── layout-init/SKILL.md     /layout-init: existing code → LAYOUT.md (tree, components, database, logic)
 │   └── roadmap-sync/SKILL.md    /roadmap-sync: fix drift between roadmap and code
 ├── hooks/
-│   ├── hooks.json               registers the SessionStart and Stop hooks
-│   └── roadmap_hook.py          start: load layout + roadmap rules and state; stop: update reminder
+│   ├── hooks.json               registers the SessionStart, PostToolUse and Stop hooks
+│   └── roadmap_hook.py          start: load rules and state; edit: record edited files; stop: reminder
 ├── rules/
 │   ├── layout.md                loaded when LAYOUT.md exists: keep it current, how to add something
 │   └── roadmap.md               loaded when ROADMAP.md exists: tick, log, progress, deviations
