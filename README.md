@@ -4,7 +4,7 @@
 >
 > **~96% less code churn · ~62% cheaper ($13.45 vs $35.00) · ~70% faster · 100% build pass**
 >
-> Measured on headless IBM Bob 2.0 sessions stabilizing a production-grade fullstack monorepo ([`tducn110/Tracker_yourMoney`](file:///home/pro/hackathon/Tracker_yourMoney): Next.js 16 + Hono + Drizzle ORM + PostgreSQL), against the same agent running an unconstrained single-prompt baseline.
+> Measured on headless IBM Bob 2.0 sessions stabilizing a production-grade fullstack monorepo ([`tducn110/Tracker_yourMoney`](https://github.com/tducn110/Tracker_yourMoney): Next.js 16 + Hono + Drizzle ORM + PostgreSQL), against the same agent running an unconstrained single-prompt baseline.
 
 ---
 
@@ -241,3 +241,29 @@ python3 src/test_tools.py -v
 - Strict adherence to MIT License.
 - Zero secrets committed: `.env` and `.dev.vars` are excluded in `.gitignore` and `.bobignore`.
 - Sensitive database strings in logs and reports are sanitized and redacted.
+
+---
+
+## 📋 Full Submission Analysis
+
+See [`docs/SUBMISSION_ANALYSIS.md`](docs/SUBMISSION_ANALYSIS.md) for:
+- Complete skills inventory (12 skills) with live run results
+- Bob+Skills vs Gemini vs NoSkill comparative evaluation from `big_project_report/`
+- Dedup skill impact (−1,320 lines net, 29–80% per file pair)
+- Provenance-linked token economics from `~/.bob/db/bob.db`
+- Submission readiness checklist against Lablab.ai requirements
+- Remaining human actions before deadline
+
+---
+
+## 🏁 Submission Deliverables Quick Reference
+
+| # | What | Limit | Status | File |
+| :---: | :--- | :--- | :---: | :--- |
+| 1 | **Long Description** | ≤500 words | ✅ **494 words** | `docs/LONG_DESCRIPTION.md` |
+| 2 | **IBM Bob Usage Statement** | ≤500 words | ✅ **365 words** | `README.md` → Deliverable 2 |
+| 3 | **Code Repository** | Public | ✅ | [`TonyLikeDev/tricklord`](https://github.com/TonyLikeDev/tricklord) (`tducn110`) |
+| 4 | **Bob Session Screenshots** | ≥1/member | ⏳ **User action** | `bob_sessions/` |
+| 5 | **Demo Video** | ≤3 min | ⏳ **User action** | `media/` |
+| 6 | **Slide Deck** | — | ✅ | `slides/ROADMAPFLOW_SLIDES.md` |
+

@@ -5,8 +5,8 @@
       "tokens": 6329
     },
     "ROADMAP.md": {
-      "bytes": 9495,
-      "tokens": 2795
+      "bytes": 9493,
+      "tokens": 2790
     },
     "Tier 1 (architecture.md)": {
       "bytes": 2108,
@@ -18,106 +18,106 @@
     }
   },
   "single_session": {
-    "baseline_tokens": 9124,
+    "baseline_tokens": 9119,
     "roadmapflow_tokens": 745,
     "tier2_tokens": 120,
     "savings_percent": 91.83,
     "tier2_only_savings_percent": 98.68
   },
   "multi_session_10_turns": {
-    "baseline_total_tokens": 118240,
+    "baseline_total_tokens": 118190,
     "roadmapflow_total_tokens": 7450,
-    "net_tokens_saved": 110790,
+    "net_tokens_saved": 110740,
     "cumulative_savings_percent": 93.7,
     "sessions": [
       {
         "session": 1,
-        "baseline_turn": 9124,
-        "baseline_cumulative": 9124,
+        "baseline_turn": 9119,
+        "baseline_cumulative": 9119,
         "roadmapflow_turn": 745,
         "roadmapflow_cumulative": 745,
-        "tokens_saved_cumulative": 8379,
+        "tokens_saved_cumulative": 8374,
         "savings_ratio": 91.8
       },
       {
         "session": 2,
-        "baseline_turn": 9724,
-        "baseline_cumulative": 18848,
+        "baseline_turn": 9719,
+        "baseline_cumulative": 18838,
         "roadmapflow_turn": 745,
         "roadmapflow_cumulative": 1490,
-        "tokens_saved_cumulative": 17358,
+        "tokens_saved_cumulative": 17348,
         "savings_ratio": 92.1
       },
       {
         "session": 3,
-        "baseline_turn": 10324,
-        "baseline_cumulative": 29172,
+        "baseline_turn": 10319,
+        "baseline_cumulative": 29157,
         "roadmapflow_turn": 745,
         "roadmapflow_cumulative": 2235,
-        "tokens_saved_cumulative": 26937,
+        "tokens_saved_cumulative": 26922,
         "savings_ratio": 92.3
       },
       {
         "session": 4,
-        "baseline_turn": 10924,
-        "baseline_cumulative": 40096,
+        "baseline_turn": 10919,
+        "baseline_cumulative": 40076,
         "roadmapflow_turn": 745,
         "roadmapflow_cumulative": 2980,
-        "tokens_saved_cumulative": 37116,
+        "tokens_saved_cumulative": 37096,
         "savings_ratio": 92.6
       },
       {
         "session": 5,
-        "baseline_turn": 11524,
-        "baseline_cumulative": 51620,
+        "baseline_turn": 11519,
+        "baseline_cumulative": 51595,
         "roadmapflow_turn": 745,
         "roadmapflow_cumulative": 3725,
-        "tokens_saved_cumulative": 47895,
+        "tokens_saved_cumulative": 47870,
         "savings_ratio": 92.8
       },
       {
         "session": 6,
-        "baseline_turn": 12124,
-        "baseline_cumulative": 63744,
+        "baseline_turn": 12119,
+        "baseline_cumulative": 63714,
         "roadmapflow_turn": 745,
         "roadmapflow_cumulative": 4470,
-        "tokens_saved_cumulative": 59274,
+        "tokens_saved_cumulative": 59244,
         "savings_ratio": 93.0
       },
       {
         "session": 7,
-        "baseline_turn": 12724,
-        "baseline_cumulative": 76468,
+        "baseline_turn": 12719,
+        "baseline_cumulative": 76433,
         "roadmapflow_turn": 745,
         "roadmapflow_cumulative": 5215,
-        "tokens_saved_cumulative": 71253,
+        "tokens_saved_cumulative": 71218,
         "savings_ratio": 93.2
       },
       {
         "session": 8,
-        "baseline_turn": 13324,
-        "baseline_cumulative": 89792,
+        "baseline_turn": 13319,
+        "baseline_cumulative": 89752,
         "roadmapflow_turn": 745,
         "roadmapflow_cumulative": 5960,
-        "tokens_saved_cumulative": 83832,
+        "tokens_saved_cumulative": 83792,
         "savings_ratio": 93.4
       },
       {
         "session": 9,
-        "baseline_turn": 13924,
-        "baseline_cumulative": 103716,
+        "baseline_turn": 13919,
+        "baseline_cumulative": 103671,
         "roadmapflow_turn": 745,
         "roadmapflow_cumulative": 6705,
-        "tokens_saved_cumulative": 97011,
+        "tokens_saved_cumulative": 96966,
         "savings_ratio": 93.5
       },
       {
         "session": 10,
-        "baseline_turn": 14524,
-        "baseline_cumulative": 118240,
+        "baseline_turn": 14519,
+        "baseline_cumulative": 118190,
         "roadmapflow_turn": 745,
         "roadmapflow_cumulative": 7450,
-        "tokens_saved_cumulative": 110790,
+        "tokens_saved_cumulative": 110740,
         "savings_ratio": 93.7
       }
     ]
