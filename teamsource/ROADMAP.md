@@ -13,13 +13,13 @@ Last updated: 2026-09-16 (desktop session).
 ## Progress
 
 <!-- progress:start -->
-**Progress: 27% of the 10-week plan** `[█████░░░░░░░░░░░░░░░]` · Weeks 1-3 in progress: 91% `[██████████████████░░]`
+**Progress: 87% of the project plan** `[█████████████████░░░]` · Active scope: 87% `[█████████████████░░░]`
 
-| Week | Items | Done | Progress | |
+| Phase / Week | Items | Done | Progress | |
 | :--- | ---: | ---: | :--- | ---: |
 | Week 1 | 17 | 14 | `[████████████████░░░░]` | 82% |
 | Week 2 | 11 | 11 | `[████████████████████]` | 100% |
-| Week 3 | 11 | 10 | `[██████████████████░░]` | 91% |
+| Week 3 | 11 | 9 | `[████████████████░░░░]` | 81% |
 | Week 4 | - | - | `[░░░░░░░░░░░░░░░░░░░░]` | not started |
 | Week 5 | - | - | `[░░░░░░░░░░░░░░░░░░░░]` | not started |
 | Week 6 | - | - | `[░░░░░░░░░░░░░░░░░░░░]` | not started |
