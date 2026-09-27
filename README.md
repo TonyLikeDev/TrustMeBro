@@ -9,8 +9,13 @@
 ## Commands
 
 - `/roadmap-planner`: an idea or source documents become `PLAN.md`. It stops for your review; once you approve, it creates `ROADMAP.md` and does the first action.
-- `/layout-init`: an existing codebase becomes `LAYOUT.md`: folder tree with purposes, components and how they connect, database schema, and a list of the business logic with where each piece lives.
-- `/roadmap-sync`: checks the roadmap against the code and git history and fixes the drift.
+- `/layout-init`: an existing codebase becomes `LAYOUT.md`: folder tree, components, database schema, and business logic mapping.
+- `/roadmap-navigator`: narrows context to the active phase by extracting a minimal Tier 2 snapshot (`≤ 200 tokens`).
+- `/roadmap-sync`: checks the roadmap against code and git history and fixes the drift.
+- `/roadmap-benchmark`: runs empirical token measurement and calculates context savings (>90%).
+- `/roadmap-validate`: validates exit criteria and phase integrity rules.
+- `/roadmap-audit`: audits repository compliance against RoadmapFlow 3-tier loading standards.
+- `/roadmap-scaffold`: scaffolds a standard 3-tier project structure with DB, Logic, and UI layout folders.
 
 (Also reachable as `/tricklord:roadmap-planner` and so on.)
 

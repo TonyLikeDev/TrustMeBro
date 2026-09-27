@@ -90,6 +90,7 @@
 
 ```
 slides/
-├── README.md                        ← This file
-└── [project_name]_presentation.pdf  ← Final slides (upload to lablab.ai submission form)
+├── README.md                  ← This file
+├── ROADMAPFLOW_SLIDES.md      ← Master Markdown Presentation Deck (8 Slides)
+└── [project_name]_presentation.pdf ← Exported PDF slides (ready for submission)
 ```

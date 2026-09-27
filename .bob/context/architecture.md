@@ -1,53 +1,31 @@
 # Architecture Snapshot — RoadmapFlow
 
-> Tier 1 context: always load this file at session start.
-> Last updated: 2025-01 (Session 002)
+> Tier 1 context: always load this file at session start. Target size: ≤ 650 tokens.
+> Last updated: 2026-09-27 (Session 003)
 
 ## What this project is
-RoadmapFlow is a set of 3 composable IBM Bob 2.0 skills that close the plan → execute → track loop
-for solo developers and small teams doing multi-session AI-assisted projects. It produces
-`PLAN.md` (frozen master plan), `ROADMAP.md` (live status board), and `.bob/context/` snapshots
-that keep each session's token cost minimal.
+RoadmapFlow is a plan-first context engine and skill system for multi-session projects. Produces `PLAN.md` (master plan), `ROADMAP.md` (status board), `LAYOUT.md` (code map), and `.bob/context/` snapshots for >90% token reduction.
 
 ## Stack
-- Platform: IBM Bob 2.0 (Skills + Custom Modes + Rules)
-- Storage: files on disk (Markdown) — Git-tracked, human-readable
-- No MCP servers, no external APIs, no database
+- Engine: Python 3.10+ standard library (`src/roadmap.py`, `src/scaffold.py`, `src/benchmark.py`)
+- Storage: Markdown files — Git-tracked, human-readable
+- Integrations: Claude Code / Gemini CLI / IBM Bob 2.0 Plugin Hooks & Skills
 
 ## Key decisions
-- **3-tier context loading**: architecture.md (Tier 1, ≤500 tok) → current-phase.md (Tier 2,
-  ≤200 tok) → PLAN.md + ROADMAP.md (Tier 3, never in main context). Rationale: 75% token waste
-  observed in Session 001 (160k tokens, no code written).
-- **No MCP layer**: removed as over-engineering. Bob reads/writes files directly via native tools.
-- **Mode-specific rules**: rules-agent/ enforces plan-before-act; rules-ask/ and rules-plan/ are
-  lean, mode-targeted. Reduces irrelevant rule noise per mode.
-- **Actor-Critic via subagents**: high-risk tasks spawn a Critic subagent for review.
-  Boosts reliability from ~75% to ~85-90% without unbounded context growth.
+- **3-Tier Context Model**: Tier 1 (`architecture.md`, `LAYOUT.md`) → Tier 2 (`current-phase.md` ≤200 tok) → Tier 3 (`PLAN.md`, `ROADMAP.md`, init/research docs — outside main context).
+- **Document Ingestion**: Existing/init docs (`planning/`, `research_docs/`) ingested during `/roadmap-planner` into `PLAN.md` Decisions Log, then isolated in Tier 3.
+- **Deterministic State Engine**: Pure Python CLI handles progress math, validation, and snapshotting with zero external dependencies.
+- **Git Drift Detection**: `/roadmap-sync` verifies code/doc changes against status checkboxes and logs traceable deviations.
 
-## Source layout
-```
-.bob/
-  skills/
-    project-roadmap/SKILL.md   — generates PLAN.md + ROADMAP.md + context files
-    roadmap-navigator/SKILL.md — refreshes Tier 2 snapshot at session start
-    dev-workflow/SKILL.md      — executes tasks, ticks ROADMAP.md, closes phases
-  rules-agent/
-    execution-discipline.md    — plan-before-act, no redundant calls, token budget
-  rules-ask/
-    clarification-only.md      — Ask mode: no planning, no execution
-  rules-plan/
-    architecture-aware.md      — Plan mode: read architecture.md before proposing
-  context/
-    architecture.md            — THIS FILE (Tier 1, always loaded)
-    current-phase.md           — Tier 2 snapshot (session-local, not committed)
-planning/
-  CURRENT_STATE.md             — problem statement, solution design, open items
-docs/                          — submission docs, demo scripts
-slides/                        — hackathon presentation
-teamsource/                    — live demo project (proof of RoadmapFlow working)
-```
+## Source Layout
+- `src/`: Core Python engine modules (`roadmap.py`, `scaffold.py`, `benchmark.py`)
+- `src/db/`, `src/logic/`, `src/ui/`: Reusable component architecture layouts
+- `src/hooks/`: Plugin SessionStart & Stop hooks (`roadmap_hook.py`)
+- `src/rules/`: Dynamic system rules loaded into LLM sessions (`layout.md`, `roadmap.md`)
+- `src/templates/`: Document templates (`LAYOUT.md`, `PLAN.md`, `ROADMAP.md`)
+- `planning/`: Raw requirements, problem statement, and judging guidelines
+- `.bob/context/`: Tier 1 (`architecture.md`) and Tier 2 (`current-phase.md`)
 
 ## What NOT to re-read every session
-- `planning/CURRENT_STATE.md`: historical context — use this file + current-phase.md instead
-- `PLAN.md` / `ROADMAP.md` of demo project: load via subagent only
-- Any completed-phase content: already ticked, not relevant to current work
+- Raw init/research docs (`planning/*.md`, `research_docs/`): Summarized in `PLAN.md` & `LAYOUT.md`.
+- Historical `PLAN.md` & `ROADMAP.md` completed phases: Query via subagent or CLI snapshot.

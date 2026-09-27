@@ -170,7 +170,7 @@ def extract_tier2_snapshot(roadmap_path: Path) -> Dict[str, str]:
             return []
         items = re.findall(r"-\s*\[(?: |~)\]\s*(.+)", m.group(1))
         # Keep each task to 1 short line to respect token budget
-        return [it.strip().split("\n")[0][:90] for it in items]
+        return [it.strip().split("\n")[0][:55] for it in items]
 
     open_build = get_open_tasks("Build")
     open_measure = get_open_tasks("Measure")
@@ -187,10 +187,7 @@ def extract_tier2_snapshot(roadmap_path: Path) -> Dict[str, str]:
 
     snapshot_md = [
         "# Current Phase Context",
-        "",
-        f"**Project**: {project_title}",
-        f"**Current phase**: {active_phase['title']}",
-        f"**Phase status**: In progress ({active_phase['done']}/{active_phase['total']} tasks done)",
+        f"**Project**: {project_title} | **Phase**: {active_phase['title']} ({active_phase['done']}/{active_phase['total']} done)",
         "",
         "## Open Tasks",
     ]
@@ -206,10 +203,7 @@ def extract_tier2_snapshot(roadmap_path: Path) -> Dict[str, str]:
 
     snapshot_md.extend([
         "",
-        "## Completed in this phase",
-        f"{active_phase['done']} of {active_phase['total']} tasks done.",
-        "",
-        "## Immediate next action",
+        "## Immediate Next Action",
         next_action,
     ])
 

@@ -5,9 +5,9 @@
 
 ## 1. Executive Summary
 
-- **Single-Session Context Reduction**: **91.26% reduction** (9,124 tokens → 797 tokens).
-- **Tier 2 Snapshot Alone**: **98.29% reduction** (156 tokens vs 9,124 tokens baseline).
-- **10-Session Cumulative Savings**: **93.3% saved** (**110,270 tokens preserved** across 10 developer sessions).
+- **Single-Session Context Reduction**: **91.83% reduction** (9,124 tokens → 745 tokens).
+- **Tier 2 Snapshot Alone**: **98.68% reduction** (120 tokens vs 9,124 tokens baseline).
+- **10-Session Cumulative Savings**: **93.7% saved** (**110,790 tokens preserved** across 10 developer sessions).
 - **Quality Cliff Avoidance**: Prevents hitting IBM Bob 2.0's reasoning degradation cliff (>100k context threshold).
 
 ---
@@ -19,9 +19,9 @@
 | `teamsource/RESEARCH_PLAN.md` | Baseline (Master Plan) | 24,715 bytes | 6,329 | Unbounded |
 | `teamsource/ROADMAP.md` | Baseline (Status Board) | 9,495 bytes | 2,795 | Unbounded |
 | **Baseline Total** | Full Context Ingestion | **34,210 bytes** | **9,124** | ❌ Pollutes main window |
-| `.bob/context/architecture.md` | Tier 1 (Project Anchor) | 2,675 bytes | 641 | ✅ Target ≤ 500-650 tokens |
-| `.bob/context/current-phase.md` | Tier 2 (Phase Snapshot) | 597 bytes | 156 | ✅ Strictly ≤ 200 tokens |
-| **RoadmapFlow Active Context** | Tier 1 + Tier 2 | **3,272 bytes** | **797** | **91.26% Savings** |
+| `.bob/context/architecture.md` | Tier 1 (Project Anchor) | 2,108 bytes | 625 | ✅ Target ≤ 500-650 tokens |
+| `.bob/context/current-phase.md` | Tier 2 (Phase Snapshot) | 474 bytes | 120 | ✅ Strictly ≤ 200 tokens |
+| **RoadmapFlow Active Context** | Tier 1 + Tier 2 | **2,582 bytes** | **745** | **91.83% Savings** |
 
 ---
 
@@ -32,21 +32,21 @@ Without RoadmapFlow, previous session summaries and old tasks accumulate in the 
 
 | Session # | Baseline Turn | Baseline Cumulative | RoadmapFlow Turn | RoadmapFlow Cumulative | Cumulative Savings |
 | ---: | ---: | ---: | ---: | ---: | ---: |
-| Session 01 | 9,124 | 9,124 | 797 | 797 | **91.3%** |
-| Session 02 | 9,724 | 18,848 | 797 | 1,594 | **91.5%** |
-| Session 03 | 10,324 | 29,172 | 797 | 2,391 | **91.8%** |
-| Session 04 | 10,924 | 40,096 | 797 | 3,188 | **92.0%** |
-| Session 05 | 11,524 | 51,620 | 797 | 3,985 | **92.3%** |
-| Session 06 | 12,124 | 63,744 | 797 | 4,782 | **92.5%** |
-| Session 07 | 12,724 | 76,468 | 797 | 5,579 | **92.7%** |
-| Session 08 | 13,324 | 89,792 | 797 | 6,376 | **92.9%** |
-| Session 09 | 13,924 | 103,716 | 797 | 7,173 | **93.1%** |
-| Session 10 | 14,524 | 118,240 | 797 | 7,970 | **93.3%** |
+| Session 01 | 9,124 | 9,124 | 745 | 745 | **91.8%** |
+| Session 02 | 9,724 | 18,848 | 745 | 1,490 | **92.1%** |
+| Session 03 | 10,324 | 29,172 | 745 | 2,235 | **92.3%** |
+| Session 04 | 10,924 | 40,096 | 745 | 2,980 | **92.6%** |
+| Session 05 | 11,524 | 51,620 | 745 | 3,725 | **92.8%** |
+| Session 06 | 12,124 | 63,744 | 745 | 4,470 | **93.0%** |
+| Session 07 | 12,724 | 76,468 | 745 | 5,215 | **93.2%** |
+| Session 08 | 13,324 | 89,792 | 745 | 5,960 | **93.4%** |
+| Session 09 | 13,924 | 103,716 | 745 | 6,705 | **93.5%** |
+| Session 10 | 14,524 | 118,240 | 745 | 7,450 | **93.7%** |
 
 ```text
 Token Usage Across 10 Sessions (Lower is Better)
 Baseline     : [████████████████████████████████████████] 118,240 tokens
-RoadmapFlow  : [███░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░]   7,970 tokens (93.3% saved)
+RoadmapFlow  : [███░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░]   7,450 tokens (93.7% saved)
 ```
 
 ---
