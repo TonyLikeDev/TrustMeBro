@@ -105,7 +105,8 @@ def start(project, data):
 
 def edit(project, data):
     tool_input = data.get("tool_input") or {}
-    path = tool_input.get("file_path") or tool_input.get("notebook_path")
+    # Bob uses "path"; Claude Code uses "file_path" / "notebook_path"
+    path = tool_input.get("path") or tool_input.get("file_path") or tool_input.get("notebook_path")
     if path:
         with edit_log(data).open("a", encoding="utf-8") as f:
             f.write(path + "\n")

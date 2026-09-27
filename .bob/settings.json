@@ -1,0 +1,39 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 src/hooks/roadmap_hook.py start || python src/hooks/roadmap_hook.py start",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "^(write_file|apply_diff|search_and_replace|insert_content)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 src/hooks/roadmap_hook.py edit || python src/hooks/roadmap_hook.py edit",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 src/hooks/roadmap_hook.py stop || python src/hooks/roadmap_hook.py stop",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -17,6 +17,10 @@ Known flaws in the tricklord plugin. One entry per bug. When one is fixed, set i
 | BUG-011 | Minor | Example docs publish personal information | open |
 | BUG-012 | Medium | File changes made through shell commands are not seen | open |
 | BUG-013 | Minor | Progress refresh needs a Bash permission on every tick | open |
+| BUG-014 | Medium | `orchestrator` ignores the tricklord marker | fixed (v0.3.1) |
+| BUG-015 | Minor | README does not document `dedup-merge` and `orchestrator` | fixed (v0.3.1) |
+| BUG-016 | Minor | `dedup-merge` is written for one specific project | fixed (v0.3.1) |
+| BUG-017 | Minor | `orchestrator` description triggers on any vague request | open |
 
 ---
 
@@ -37,9 +41,8 @@ Known flaws in the tricklord plugin. One entry per bug. When one is fixed, set i
 
 - **Severity:** serious · **Found:** 2026-09-27 · **Status:** open
 - **Where:** whole plugin
-- **What happens:** the hooks were verified live on 2026-09-27 on macOS (see BUG-001, BUG-003, BUG-004), including the `PostToolUse` payload. Still unproven:
-  - the skills finding `../../templates/` and `../../scripts/` relative to their base directory;
-  - `/layout-init` working without the `tricklord:` prefix;
+- **What happens:** the hooks were verified live on 2026-09-27 on macOS (see BUG-001, BUG-003, BUG-004), including the `PostToolUse` payload. Skills invoked by short name (`/orchestrator`, `/dedup-merge`) were verified live the same day (`bob_sessions/plugin_tests/2026-09-27_tricklord_live_tests.md`). Still unproven:
+  - live runs of `/layout-init`, `/roadmap-planner` and `/roadmap-sync`, including the skills finding `../../templates/` and `../../scripts/` relative to their base directory;
   - the `python3 ... || python ...` hook command on Windows.
 - **Fix idea:** run `claude -p` with `--plugin-dir src` against a small sample project (one run per skill, plus one session with each hook), and test once on the Windows desktop.
 
@@ -126,3 +129,31 @@ Known flaws in the tricklord plugin. One entry per bug. When one is fixed, set i
 - **Where:** `rules/roadmap.md` rule 3, the stop reminder, `scripts/roadmap_progress.py`
 - **What happens:** Claude refreshes the progress block by running the script through Bash with absolute paths. Unless the user has allowed that command, every tick asks for permission; in the live test (`acceptEdits`) the call was blocked, so Claude ticked the item and logged it but the progress block stayed at 0%.
 - **Fix idea:** let the stop hook run the progress script itself whenever `ROADMAP.md` was edited this turn (it already knows from the edit log), and drop the manual refresh step from the rules.
+
+### BUG-014: `orchestrator` ignores the tricklord marker
+
+- **Severity:** medium · **Found:** 2026-09-27 · **Status:** fixed (v0.3.1)
+- **Where:** `skills/orchestrator/SKILL.md`, "State to check"
+- **What happens:** the skill decided project state with "one `ls`, no reading", so any `PLAN.md` or `ROADMAP.md` counted as tricklord's, bringing BUG-001 back at the skill level: a repo's own roadmap would be routed to `roadmap-sync`, an unrelated plan to "approve this plan".
+- **Fix (v0.3.1):** a file counts only if its first line is `<!-- tricklord -->` (`head -n 1`); otherwise it is treated as absent and never edited. A `ROADMAP.md` with progress markers but no tricklord marker is recognised as a pre-marker roadmap and gets `roadmap-sync` offered. Verified live (tests S1 to S3 in `bob_sessions/plugin_tests/2026-09-27_tricklord_live_tests.md`).
+
+### BUG-015: README does not document `dedup-merge` and `orchestrator`
+
+- **Severity:** minor · **Found:** 2026-09-27 · **Status:** fixed (v0.3.1)
+- **Where:** `README.md`, Commands and Layout
+- **What happens:** the two skills added in PR #2 were missing from the command list and the file tree.
+- **Fix (v0.3.1):** both are listed in Commands and in the Layout tree.
+
+### BUG-016: `dedup-merge` is written for one specific project
+
+- **Severity:** minor · **Found:** 2026-09-27 · **Status:** fixed (v0.3.1)
+- **Where:** `skills/dedup-merge/SKILL.md`
+- **What happens:** examples and rules came from one web dashboard (`teachers/` vs `teachers/ta/`, a `"teacher" | "ta"` prop, `loadView`, `noFuture`, server actions, pages opened in a browser), the report step hard-coded `-- src`, and groups under ~100 shared lines were always left alone, which skips most duplicated functions outside page components.
+- **Fix (v0.3.1):** generic examples; use an installed duplicate detector (`jscpd`, PMD CPD, pylint `duplicate-code`) when there is one; threshold lowered to ~20 shared lines; generated, vendored and intentionally separate code left alone; entry points kept as thin wrappers when something depends on them; the report diff scoped to the merged files; step 4 also updates the Logic list in `LAYOUT.md` (missed in the live test). Verified live (test S4): 76 → 58 lines, byte-identical output, tests passing.
+
+### BUG-017: `orchestrator` description triggers on any vague request
+
+- **Severity:** minor · **Found:** 2026-09-27 · **Status:** open
+- **Where:** `skills/orchestrator/SKILL.md`, `description`
+- **What happens:** "Use when the request is vague" matches many ordinary requests, so Claude may load the skill when it isn't needed, costing context each time.
+- **Fix idea:** narrow the trigger to project-level questions ("what should I do next", "where do I start", "which skill"), and leave vague coding requests alone.

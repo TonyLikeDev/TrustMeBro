@@ -7,9 +7,11 @@ description: Routes work between the tricklord skills (layout-init, roadmap-plan
 
 Pick the skill from project state, run it, then hand off. Suggest a skill; get the user's go-ahead before one that writes files.
 
-## State to check (one `ls`, no reading)
+## State to check (first lines only, no full reads)
 
-`LAYOUT.md`, `PLAN.md`, `ROADMAP.md` (also under `docs/`, `research_docs/`), and whether there is code.
+`LAYOUT.md`, `PLAN.md` (or `RESEARCH_PLAN.md`) and `ROADMAP.md` in the project root, `docs/` and `research_docs/`, and whether there is code.
+
+A file counts only if its first line is `<!-- tricklord -->` (check with `head -n 1`). Without the marker it belongs to the repo, not to tricklord: treat it as absent and never edit it. One exception: a `ROADMAP.md` that has `<!-- progress:start -->` but no marker is a tricklord roadmap from before the marker existed; offer `roadmap-sync` to add it.
 
 ## Pick
 

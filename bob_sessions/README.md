@@ -87,6 +87,8 @@ _(Screenshots will appear here after upload)_
 
 ```
 bob_sessions/
-└── README.md   ← This file
+├── README.md   ← This file
+├── session_logs/   ← written logs of Bob sessions
+└── plugin_tests/   ← Claude Code test runs of the tricklord plugin (not Bob sessions)
     (add screenshots below this line)
 ```
