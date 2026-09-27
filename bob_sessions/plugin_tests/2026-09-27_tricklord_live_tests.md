@@ -58,8 +58,21 @@ Minor misses, observed in S1 and S4:
 - The report skipped the skill's note that counts added lines separately from the net saving.
 - In S1 the orchestrator read the repo's `PLAN.md` and `ROADMAP.md` in full although the skill says to check first lines only. Harmless here, but it costs tokens on large files.
 
+## New-task roadmap (v0.4.0, BUG-020)
+
+Project: `app.py` with an `add` function and a marked `LAYOUT.md`, no roadmap. Prompt: "Add a function multiply(a, b) to app.py that returns a * b." Claude Code, Sonnet 5, `acceptEdits`.
+
+| Run | Setup | What happened | Result |
+| :--- | :--- | :--- | :--- |
+| N1 | Rule + reminder, AI creates the roadmap | Roadmap written before the code, task under Maintenance, but a stripped-down file without the `<!-- tricklord -->` marker | ❌ format |
+| N2 | Wording: keep the marker and sections | Marker, Next actions and Change log kept, but no progress markers (hand-written "Progress: 1/1") | ❌ format |
+| N3 | Hook creates `ROADMAP.md` from the template | Hook-made roadmap; Claude added `[ ] Add multiply(a, b)` under Maintenance **before** editing `app.py`, then ticked it and updated `LAYOUT.md` | ✅ pass |
+
+Progress block stayed empty in N3 because running the progress script needs a Bash permission (BUG-013). The same test in IBM Bob (`bob run`) could not run here: it needs `BOB_API_KEY`.
+
 ## Not covered
 
 - `/layout-init`, `/roadmap-planner` and `/roadmap-sync` live runs.
 - Windows (the `python3 || python` hook command).
+- The new-task flow in IBM Bob (needs `BOB_API_KEY`).
 - Interactive sessions (all runs used `claude -p`).

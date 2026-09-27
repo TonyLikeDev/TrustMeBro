@@ -7,7 +7,7 @@ description: Plan a new project, from an idea or from existing documents (propos
 
 Two stages with a hard stop between them. Stage 1 writes `PLAN.md`; stage 2 runs only after the user approves it.
 
-Templates at `src/templates/PLAN.md` and `src/templates/ROADMAP.md`. Progress script at `src/scripts/roadmap_progress.py`.
+Templates at `.bob/tricklord/templates/PLAN.md` and `.bob/tricklord/templates/ROADMAP.md`. Progress script at `.bob/tricklord/scripts/roadmap_progress.py`.
 
 **Planning an addition to an existing project** (a big feature): read `LAYOUT.md` first. The plan builds on the components, database and logic it describes, and names the ones it changes. If `PLAN.md` exists, append the new phases to its schedule and add a Deviations line `- YYYY-MM-DD: added <feature> (awaiting approval)`; otherwise write `PLAN.md` for this addition alone. Stage 1 runs as usual. In stage 2, add the phases to `ROADMAP.md` (creating it if needed) instead of starting a new roadmap, drop "(awaiting approval)", and update `LAYOUT.md` as the code lands.
 
@@ -34,5 +34,5 @@ Iterate on the plan as long as the user wants.
 
 1. Create `ROADMAP.md` in the project root from the template, with one `## <Phase>: <title>` heading per phase in the plan. Expand only the first phase into checkboxes (its Build / Measure / Write / Exit criteria items); the others say "Not started. See the schedule in `PLAN.md`."
 2. Fill "Next actions" with the first phase's items in order, **User action** items first.
-3. Refresh progress: `python3 src/scripts/roadmap_progress.py ROADMAP.md` (`python` where `python3` is missing).
+3. Refresh progress: `python3 .bob/tricklord/scripts/roadmap_progress.py ROADMAP.md` (`python` where `python3` is missing).
 4. Do the first action, tick it with its evidence, add the Change log line, and rerun the progress script. From here the roadmap rules loaded by the hook apply.

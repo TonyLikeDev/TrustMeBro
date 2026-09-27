@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 from roadmap_progress import phases, render  # noqa: E402
 
+BOB = ROOT.parent / ".bob" / "tricklord"  # IBM Bob copy of the scripts and templates
 MARK = "<!-- tricklord -->\n"
 SAMPLE = MARK + """# Roadmap
 ## Progress
@@ -36,6 +37,13 @@ def hook(project, mode, payload=None):
     env = {**os.environ, "CLAUDE_PROJECT_DIR": str(project)}
     cmd = [sys.executable, str(ROOT / "hooks" / "roadmap_hook.py"), mode]
     return subprocess.run(cmd, input=json.dumps(payload or {}), capture_output=True, text=True, env=env).stdout
+
+
+def bob_hook(project, mode, payload=None):
+    """Run the .bob/tricklord copy the way IBM Bob does: from the workspace root, no CLAUDE_PROJECT_DIR."""
+    env = {k: v for k, v in os.environ.items() if k != "CLAUDE_PROJECT_DIR"}
+    cmd = [sys.executable, str(BOB / "hooks" / "roadmap_hook.py"), mode]
+    return subprocess.run(cmd, input=json.dumps(payload or {}), capture_output=True, text=True, env=env, cwd=project).stdout
 
 
 def git(project, *args):
@@ -111,8 +119,46 @@ def test_stop():
         assert hook(p, "stop", s) == ""  # edits outside the project don't count
 
 
+def test_prompt():
+    with tempfile.TemporaryDirectory() as d:
+        p = Path(d).resolve()
+        assert hook(p, "prompt") == ""  # no tricklord files: silent
+        (p / "LAYOUT.md").write_text("# Architecture\n")
+        assert hook(p, "prompt") == ""  # a repo's own LAYOUT.md is not ours
+        (p / "LAYOUT.md").write_text(MARK + "# Project layout\n")
+        (p / "ROADMAP.md").write_text("# Our public roadmap\n")
+        out = hook(p, "prompt")
+        assert "belongs to the repo" in out and (p / "ROADMAP.md").read_text() == "# Our public roadmap\n", out
+        (p / "ROADMAP.md").unlink()
+        out = hook(p, "prompt", {"prompt": "add a login page"})
+        assert "new task" in out and "just created" in out and "Maintenance" in out and "LAYOUT.md" in out, out
+        made = (p / "ROADMAP.md").read_text()  # created by the hook, not the model
+        assert made.startswith(MARK) and "<!-- progress:start -->" in made and "## Change log" in made, made
+        assert "## Week" not in made and "<YYYY" not in made and "1. ..." not in made, made
+        assert phases(made) == [], phases(made)
+        out = hook(p, "prompt")
+        assert "`ROADMAP.md`" in out and "just created" not in out, out  # created once, then just reminded
+        if BOB.is_dir():  # Bob's payload has no cwd, and there is no CLAUDE_PROJECT_DIR
+            out = bob_hook(p, "prompt", {"event": "UserPromptSubmit", "session_id": "s", "prompt": "fix the header"})
+            assert "new task" in out and "`ROADMAP.md`" in out, out
+
+
+def test_bob_copy():
+    """The .bob/tricklord files are copies of src/ so a copied .bob/ folder works in any project; they must not drift."""
+    if not BOB.is_dir():
+        return
+    for src_file, bob_file in [("hooks/roadmap_hook.py", "hooks/roadmap_hook.py"),
+                               ("scripts/roadmap_progress.py", "scripts/roadmap_progress.py"),
+                               ("templates/ROADMAP.md", "templates/ROADMAP.md"),
+                               ("templates/PLAN.md", "templates/PLAN.md"),
+                               ("templates/LAYOUT.md", "templates/LAYOUT.md")]:
+        assert (ROOT / src_file).read_bytes() == (BOB / bob_file).read_bytes(), f"copy src/{src_file} to .bob/tricklord/{bob_file}"
+
+
 if __name__ == "__main__":
     test_progress()
     test_start()
     test_stop()
+    test_prompt()
+    test_bob_copy()
     print("ok")

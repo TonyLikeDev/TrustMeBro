@@ -5,7 +5,7 @@ description: Check ROADMAP.md against the actual code and git history and fix th
 
 # Roadmap sync
 
-Progress script: `src/scripts/roadmap_progress.py`.
+Progress script: `.bob/tricklord/scripts/roadmap_progress.py`.
 
 1. Read the roadmap and the plan, then `git log` since the last Change log date, plus uncommitted changes.
 2. Check every `[x]` and `[~]`: does the evidence it names still exist? Run the test suite once if it is quick; a failing test turns its `[x]` back into `[~]`.
