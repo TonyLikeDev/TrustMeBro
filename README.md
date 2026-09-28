@@ -32,7 +32,7 @@ Edit `src/rules/` to change how the AI maintains the layout and roadmap, and `sr
 
 ---
 
-## 🤖 What Bob does with TrustMeBro
+## What Bob does with TrustMeBro
 
 Copy `.bob/` into a project that has a `LAYOUT.md` (made by `layout-init`) and give Bob a task. Tested with IBM Bob Shell 2.0.5 on a task to add a `multiply` function ([trustmebro-bob-test/RESULT.md](trustmebro-bob-test/RESULT.md)):
 
@@ -47,7 +47,7 @@ The test run took 35 seconds and 12 tool calls, and passed every check. The end-
 
 ---
 
-## 📊 Benchmark: with and without TrustMeBro
+## Benchmark: with and without TrustMeBro
 
 **The test:** a half-finished project, a new session per task, three setups with identical code. [shoplite](benchmark/fixture/shoplite) is a 35-file shop backend with 16 passing tests: 3 features done, 2 open (discount codes, low-stock alerts), and 1 known bug (orders over $50 still pay shipping). The bug is recorded only in the roadmap, as real known issues often are.
 
@@ -90,7 +90,7 @@ Reproduce: `python3 benchmark/project_bench.py run`, then `python3 benchmark/pro
 
 ---
 
-## 📁 Layout
+## Layout
 
 ```
 src/
@@ -155,7 +155,7 @@ web/                             project website (open web/index.html): the idea
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -232,7 +232,7 @@ python3 tests/test_plugin.py
 
 ---
 
-## 🤖 IBM Bob 2.0 Usage in This Code
+## IBM Bob 2.0 Usage in This Code
 
 > Document how Bob contributed to building this code.
 > This feeds into your IBM Bob Usage Statement for submission.
